@@ -4,31 +4,34 @@ import os.path
 import re
 import sys
 
-# Create and configure logger
-LOG_FORMAT = "%(asctime)s %(levelname)s: %(message)s"
+LOG_FORMAT = "%(asctime)s ETL_Log[%(lineno)d] %(levelname)s: %(message)s"
 logging.basicConfig(filename = os.getcwd()+"/ETL_Log.log",
                     level = logging.DEBUG,
                     format = LOG_FORMAT,
                     filemode = 'w')
 logger = logging.getLogger()
 
-
 class Db():
     def __init__ (self, path):
-        self.dbPath = path
+        self.path = path
 
     def execute(self, command):
         def none_to_null(command):
             return re.sub(r", ?(None) ?,", ", NULL,", command)
         command = none_to_null(command)
         logger.debug("SQL Execute: {}".format(command))
-        self.db_conn = sqlite3.connect(self.dbPath)
+        self.db_conn = sqlite3.connect(self.path)
         self.db_crsr = self.db_conn.cursor()
-        self.db_crsr.execute(command)
+        try:
+            self.db_crsr.execute(command)
+        except Exception as e:
+            logger.error(e)
 
     def get(self, command):
         self.execute(command)
-        return self.db_crsr.fetchall()
+        result = self.db_crsr.fetchall()
+        logger.info("\n".join(str(r) for r in result))
+        return result
     
     def set(self, command):
         self.execute(command)
@@ -42,11 +45,9 @@ class Db():
 
 class Table():
     def __init__ (self, name, db):
+        logger.info("New table created with name = {}, db = {}".format(name, db.path))
         self.name = name
         self.db = db
-
-    def prefix_table(self, prefix):
-        return "_".join([prefix, self.name])
 
     @property
     def columns(self):
@@ -58,45 +59,130 @@ class Table():
         rows = self.db.get("SELECT * FROM '{}'".format(self.name))
         return rows
 
-class S_Table(Table):
-    def __init__ (self, source_table, source_db, dest_db):
-        self.db = dest_db
-        self.name = source_table.prefix_table("S")
+class ETL_Table(Table):
+    def __init__ (self, source_table, prefix, db, write=True):
+        logger.info("New ETL table created with name = {}, db = {}".format(source_table.name, db.path))
+        self.name = "_".join([prefix, source_table.name])
+        self.db = db
+        if write or self.name not in self.db.tables:
+            self.create_from_table(source_table)
 
-        self.copy_to_table(self.name, source_table, source_db)
-
-        self.m_table = Table(source_table.prefix_table("M"), dest_db)
-        if self.m_table.name in dest_db.tables:
-            self.s_diff_m()
-        else:
-            logger.info("No existing M Tables. Creating a new M Table")
-            self.copy_to_table(self.m_table.name, source_table, source_db)
-
-    def copy_to_table(self, table_name, source_table, source_db):
-        self.db.set("DROP TABLE IF EXISTS {}".format(table_name))
-
-        command = source_db.get("SELECT sql FROM sqlite_master WHERE tbl_name='{}'".format(source_table.name))[0][0]
-        command = command.replace(source_table.name, table_name, 1)
+    def create_from_table(self, source_table):
+        self.db.set("DROP TABLE IF EXISTS {}".format(self.name))
+        command = source_table.db.get("SELECT sql FROM sqlite_master WHERE tbl_name='{}'".format(source_table.name))[0][0]
+        command = command.replace(source_table.name, self.name, 1)
         self.db.set(command)
 
-        columns = ",".join(list(map(lambda column: "'" + column + "'", source_table.columns)))
-        values = ",\n".join(str(v) for v in source_table.rows)
-        self.db.set("INSERT INTO '{}' ({}) \nVALUES \n{}".format(table_name, columns, values))
+    def insert_values(self, values):
+        logger.info("{} inserted \n{}".format(self.name, "\n".join(str(v) for v in values)))
+        columns = ",".join(list(map(lambda column: "'" + column + "'", self.columns)))
+        values = ",\n".join(str(v) for v in values)
+        command = "INSERT INTO '{}' ({}) \nVALUES \n{}".format(self.name, columns, values)
+        self.db.set("INSERT INTO '{}' ({}) \nVALUES \n{}".format(self.name, columns, values))
 
-    def s_diff_m(self):
-        diff = list(set(self.rows) - set(self.m_table.rows))
-        logger.debug("S_DIFF_M: {}".format(diff))
-        return diff
+    def delete_values(self, values):
+        if len(values) > 0:
+            logger.info("{} removed \n{}".format(self.name, "\n".join(str(v) for v in values)))
+            for value in values:
+                v = [str(self.columns[enum[0]]) + " = '" + str(enum[1]) + "'" for enum in enumerate(list(value))]
+                command = """
+                        DELETE FROM '{table}'
+                        WHERE {v}
+                        """.format(table = self.name, v = " AND ".join(v))
+                command = re.sub(r"\'(\d+)\'", r"\1", command)
+                command =  re.sub(r"= 'None'", "IS NULL", command)
+                self.db.set(command)
+        else:
+            logger.warning("Attempting to remove empty list in {}".format(self.name))
 
-class X_Table(Table):
-    def __init__ (self, source_table, source_db, dest_db):
-        self.db = dest_db
-        self.name = source_table.prefix_table("X")
+    def update_unknown(self):
+        for col in self.columns:
+            self.db.set("UPDATE '{table}' SET {col} = 'Unknown Value' WHERE {col} IS NULL".format(table = self.name, col=col))
+
+    def update_missing(self):
+        for col in self.columns:
+            self.db.set("UPDATE '{table}' SET {col} = 'Missing Value' WHERE {col} IS NULL".format(table = self.name, col=col))
+
+class Extractor():
+    def __init__ (self, source_table, db):
+        logger.info("New table created with source = {}, db = {}".format(source_table.name, db.path))
+        self.source_table = source_table
+        self.db = db
+
+    def load_s_table(self):
+        s_table = ETL_Table(self.source_table, "S", self.db, True)
+        s_table.insert_values(self.source_table.rows)
+        return s_table
+
+    def get_difference(self, a_table, b_table):
+        x_table = ETL_Table(self.source_table, "X", self.db, True)
+        values = a_table.rows
+        try:
+            values = list(set(a_table.rows) - set(b_table.rows))
+            logger.debug("Extractor: {} minus {}: {}".format(a_table.name, b_table.name, values))
+        except Exception as e:
+            logger.info("Extractor: No existing {}".format(b_table.name, x_table.name))
+
+            logger.error(e)
+        x_table.insert_values(values)
+        return x_table
+
+    def clean_rows(self, table):
+        # NULL CONDITION
+        # null_condition = list(map(lambda col: col + " IS NULL", table.columns))
+        # null_rows = self.db.get("SELECT * FROM '{}' WHERE {}".format(table.name, " OR ".join(null_condition)))
+        # EMPTY STRING
+        # empty_condition = list(map(lambda col: col + " = ''", table.columns))
+        # empty_rows = self.db.get("SELECT * FROM '{}' WHERE {}".format(table.name, " OR ".join(empty_condition)))
+
+        # e_table.insert_values(null_rows + empty_rows)
+
+        e_table = ETL_Table(self.source_table, "E", self.db, True)
+        c_table = ETL_Table(self.source_table, "C", self.db, True)
+
+        # NULL and MISSING
+        table.update_unknown()
+        table.update_missing()
+
+        # DUPLICATES
+        columns = ", ".join(table.columns[1:]) # join tables except for id
+        duplicates = self.db.get("""
+                                SELECT {cols}
+                                FROM '{table}'
+                                GROUP BY {cols} 
+                                HAVING COUNT(*) > 1
+                                """.format(table = table.name, cols = columns))
+        for duplicate in duplicates:
+            duplicate_condition = [str(table.columns[1:][enum[0]]) + " = '" + str(enum[1]) + "'" for enum in enumerate(duplicate)]
+            command = """
+                    SELECT *
+                    FROM '{table}'
+                    WHERE {duplicate_condition}
+                    """.format(table = table.name, duplicate_condition = " AND ".join(duplicate_condition))
+            command = re.sub(r"\'(\d+)\'", r"\1", command)
+            command =  re.sub(r"= 'None'", "IS NULL", command)
+            rows = self.db.get(command)
+            e_table.insert_values(rows)
+            table.delete_values(rows)
+
+        # MOVE TO CLEAN TABLE
+        c_table.insert_values(table.rows)
+
+        return [e_table, c_table]
 
 if __name__ == "__main__":
+    try:
+        os.remove(os.getcwd()+"/new.db")
+    except:
+        pass
     source_path = sys.argv[1]
     dest_path = sys.argv[2]
     source_db = Db(source_path)
     dest_db = Db(dest_path)
     table1 = Table(source_db.tables[0], source_db)
-    s_table = S_Table(table1, source_db, dest_db)
+    extractor = Extractor(table1, dest_db)
+    s_table = extractor.load_s_table()
+    m_table = ETL_Table(table1, "M", dest_db, False)
+    x_table = extractor.get_difference(s_table, m_table)
+    e_table, c_table = extractor.clean_rows(x_table)
+    m_table.insert_values(c_table.rows)
