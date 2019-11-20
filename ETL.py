@@ -5,7 +5,7 @@ import re
 import sys
 
 LOG_FORMAT = "%(asctime)s ETL_Log[%(lineno)d] %(levelname)s: %(message)s"
-logging.basicConfig(filename = os.getcwd()+"/ETL_Log.log",
+logging.basicConfig(filename = os.getcwd()+"/Log_ETL",
                     level = logging.DEBUG,
                     format = LOG_FORMAT,
                     filemode = 'w')
@@ -81,27 +81,16 @@ class ETL_Table(Table):
         self.db.set("INSERT INTO '{}' ({}) \nVALUES \n{}".format(self.name, columns, values))
 
     def delete_values(self, values):
-        if len(values) > 0:
-            logger.info("{} removed \n{}".format(self.name, "\n".join(str(v) for v in values)))
-            for value in values:
-                v = [str(self.columns[enum[0]]) + " = '" + str(enum[1]) + "'" for enum in enumerate(list(value))]
-                command = """
-                        DELETE FROM '{table}'
-                        WHERE {v}
-                        """.format(table = self.name, v = " AND ".join(v))
-                command = re.sub(r"\'(\d+)\'", r"\1", command)
-                command =  re.sub(r"= 'None'", "IS NULL", command)
-                self.db.set(command)
-        else:
-            logger.warning("Attempting to remove empty list in {}".format(self.name))
-
-    def update_unknown(self):
-        for col in self.columns:
-            self.db.set("UPDATE '{table}' SET {col} = 'Unknown Value' WHERE {col} IS NULL".format(table = self.name, col=col))
-
-    def update_missing(self):
-        for col in self.columns:
-            self.db.set("UPDATE '{table}' SET {col} = 'Missing Value' WHERE {col} IS NULL".format(table = self.name, col=col))
+        logger.info("{} removed \n{}".format(self.name, "\n".join(str(v) for v in values)))
+        for value in values:
+            v = [str(self.columns[enum[0]]) + " = '" + str(enum[1]) + "'" for enum in enumerate(list(value))]
+            command = """
+                    DELETE FROM '{table}'
+                    WHERE {v}
+                    """.format(table = self.name, v = " AND ".join(v))
+            command = re.sub(r"\'(\d+)\'", r"\1", command)
+            command =  re.sub(r"= 'None'", "IS NULL", command)
+            self.db.set(command)
 
 class Extractor():
     def __init__ (self, source_table, db):
@@ -128,37 +117,20 @@ class Extractor():
         return x_table
 
     def clean_rows(self, table):
-        # NULL CONDITION
-        # null_condition = list(map(lambda col: col + " IS NULL", table.columns))
-        # null_rows = self.db.get("SELECT * FROM '{}' WHERE {}".format(table.name, " OR ".join(null_condition)))
-        # EMPTY STRING
-        # empty_condition = list(map(lambda col: col + " = ''", table.columns))
-        # empty_rows = self.db.get("SELECT * FROM '{}' WHERE {}".format(table.name, " OR ".join(empty_condition)))
-
-        # e_table.insert_values(null_rows + empty_rows)
-
         e_table = ETL_Table(self.source_table, "E", self.db, True)
         c_table = ETL_Table(self.source_table, "C", self.db, True)
 
         # NULL and MISSING
-        table.update_unknown()
-        table.update_missing()
+        for col in table.columns:
+            self.db.set("UPDATE '{table}' SET {col} = 'Unknown Value' WHERE {col} IS NULL".format(table = table.name, col=col))
+            self.db.set("UPDATE '{table}' SET {col} = 'Missing Value' WHERE {col} IS NULL".format(table = table.name, col=col))
 
         # DUPLICATES
         columns = ", ".join(table.columns[1:]) # join tables except for id
-        duplicates = self.db.get("""
-                                SELECT {cols}
-                                FROM '{table}'
-                                GROUP BY {cols} 
-                                HAVING COUNT(*) > 1
-                                """.format(table = table.name, cols = columns))
+        duplicates = self.db.get("SELECT {cols} FROM '{table}' GROUP BY {cols} HAVING COUNT(*) > 1".format(table = table.name, cols = columns))
         for duplicate in duplicates:
             duplicate_condition = [str(table.columns[1:][enum[0]]) + " = '" + str(enum[1]) + "'" for enum in enumerate(duplicate)]
-            command = """
-                    SELECT *
-                    FROM '{table}'
-                    WHERE {duplicate_condition}
-                    """.format(table = table.name, duplicate_condition = " AND ".join(duplicate_condition))
+            command = "SELECT * FROM '{table}' WHERE {duplicate_condition}".format(table = table.name, duplicate_condition = " AND ".join(duplicate_condition))
             command = re.sub(r"\'(\d+)\'", r"\1", command)
             command =  re.sub(r"= 'None'", "IS NULL", command)
             rows = self.db.get(command)
