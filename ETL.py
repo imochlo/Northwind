@@ -5,7 +5,7 @@ import re
 import sys
 
 LOG_FORMAT = "%(asctime)s ETL_Log[%(lineno)d] %(levelname)s: %(message)s"
-logging.basicConfig(filename = os.getcwd()+"/Log_ETL",
+logging.basicConfig(filename = os.getcwd()+"/Log_ETL.log",
                     level = logging.DEBUG,
                     format = LOG_FORMAT,
                     filemode = 'w')
@@ -17,9 +17,9 @@ class Db():
 
     def execute(self, command):
         def none_to_null(command):
-            return re.sub(r", ?(None) ?,", ", NULL,", command)
+            return command.replace("None", "NULL")
         command = none_to_null(command)
-        logger.debug("SQL Execute: {}".format(command))
+        logger.debug("SQL EXECUTE: {}".format(command))
         self.db_conn = sqlite3.connect(self.path)
         self.db_crsr = self.db_conn.cursor()
         try:
@@ -30,6 +30,7 @@ class Db():
     def get(self, command):
         self.execute(command)
         result = self.db_crsr.fetchall()
+        logger.info("SQL RESULT for {}:".format(command))
         logger.info("\n".join(str(r) for r in result))
         return result
     
@@ -51,19 +52,29 @@ class Table():
 
     @property
     def columns(self):
-        columns = self.db.get("PRAGMA table_info('{}')".format(self.name))
-        return list(map(lambda column: column[1], columns)) 
+        columns = self.db.get("SELECT name FROM pragma_table_info('{}')".format(self.name))
+        return list(map(lambda column: column[0], columns)) 
+
+    @property
+    def npk_columns(self):
+        columns = self.db.get("SELECT name FROM pragma_table_info('{}') WHERE pk=0".format(self.name))
+        return list(map(lambda column: column[0], columns)) 
 
     @property
     def rows(self):
         rows = self.db.get("SELECT * FROM '{}'".format(self.name))
         return rows
 
+    @property
+    def primary_key(self):
+        pk = self.db.get("SELECT name FROM pragma_table_info('{}') WHERE pk=1".format(self.name))
+        return pk[0][0]
+
 class ETL_Table(Table):
     def __init__ (self, source_table, prefix, db, write=True):
-        logger.info("New ETL table created with name = {}, db = {}".format(source_table.name, db.path))
         self.name = "_".join([prefix, source_table.name])
         self.db = db
+        logger.info("New ETL table created with name = {}, db = {}".format(self.name, db.path))
         if write or self.name not in self.db.tables:
             self.create_from_table(source_table)
 
@@ -94,7 +105,7 @@ class ETL_Table(Table):
 
 class Extractor():
     def __init__ (self, source_table, db):
-        logger.info("New table created with source = {}, db = {}".format(source_table.name, db.path))
+        logger.info("New Extractor created for table = {}, db = {}".format(source_table.name, db.path))
         self.source_table = source_table
         self.db = db
 
@@ -126,10 +137,10 @@ class Extractor():
             self.db.set("UPDATE '{table}' SET {col} = 'Missing Value' WHERE {col} IS NULL".format(table = table.name, col=col))
 
         # DUPLICATES
-        columns = ", ".join(table.columns[1:]) # join tables except for id
+        columns = ", ".join(table.npk_columns) # join tables except for id
         duplicates = self.db.get("SELECT {cols} FROM '{table}' GROUP BY {cols} HAVING COUNT(*) > 1".format(table = table.name, cols = columns))
         for duplicate in duplicates:
-            duplicate_condition = [str(table.columns[1:][enum[0]]) + " = '" + str(enum[1]) + "'" for enum in enumerate(duplicate)]
+            duplicate_condition = [str(table.npk_columns[enum[0]]) + " = '" + str(enum[1]) + "'" for enum in enumerate(duplicate)]
             command = "SELECT * FROM '{table}' WHERE {duplicate_condition}".format(table = table.name, duplicate_condition = " AND ".join(duplicate_condition))
             command = re.sub(r"\'(\d+)\'", r"\1", command)
             command =  re.sub(r"= 'None'", "IS NULL", command)
@@ -143,18 +154,21 @@ class Extractor():
         return [e_table, c_table]
 
 if __name__ == "__main__":
-    try:
-        os.remove(os.getcwd()+"/new.db")
-    except:
-        pass
     source_path = sys.argv[1]
     dest_path = sys.argv[2]
     source_db = Db(source_path)
     dest_db = Db(dest_path)
-    table1 = Table(source_db.tables[0], source_db)
-    extractor = Extractor(table1, dest_db)
-    s_table = extractor.load_s_table()
-    m_table = ETL_Table(table1, "M", dest_db, False)
-    x_table = extractor.get_difference(s_table, m_table)
-    e_table, c_table = extractor.clean_rows(x_table)
-    m_table.insert_values(c_table.rows)
+
+    try:
+        os.remove(os.getcwd()+"/"+dest_path)
+    except:
+        pass
+
+    for t in source_db.tables:
+        table = Table(t, source_db)
+        extractor = Extractor(table, dest_db)
+        s_table = extractor.load_s_table()
+        m_table = ETL_Table(table, "M", dest_db, False)
+        x_table = extractor.get_difference(s_table, m_table)
+        e_table, c_table = extractor.clean_rows(x_table)
+        m_table.insert_values(c_table.rows)
