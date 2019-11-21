@@ -56,13 +56,18 @@ class Table():
         pk = self.db.get("SELECT name FROM pragma_table_info('{}') WHERE pk=1".format(self.name))
         return pk[0][0]
 
+class Loader():
+    def __init__ (self, name, db):
+        pass
+
 if __name__ == "__main__":
     db = Db("Northwind.db")
     def tables_with_col(col, db):
         return (list(map(lambda table: col in table, db.tables)))
     for t in db.tables:
         table = Table(t, db)
-        cols=table.columns
-        cols.remove(str(table.primary_key))
+        ids=list(filter(lambda col: col in list(map(lambda cols: cols+"Id", db.tables)), table.columns))
+        print("=====")
         print(table.name)
-        print(cols)
+        # print(table.columns)
+        print(ids)
