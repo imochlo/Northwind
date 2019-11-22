@@ -1,3 +1,6 @@
+import sqlalchemy as db
+from sqlalchemy import Table
+import pandas as pd
 import logging
 import sqlite3
 import os.path
@@ -11,164 +14,102 @@ logging.basicConfig(filename = os.getcwd()+"/Log_ETL.log",
                     filemode = 'w')
 logger = logging.getLogger()
 
-class Db():
-    def __init__ (self, path):
-        self.path = path
+class Db:
+    def __init__ (self, file):
+        self.engine = db.create_engine('sqlite:///'+file)
+        self.conn = self.engine.connect()
+        self.metadata = db.MetaData(self.engine)
+        self.url = str(self.engine.url)
 
-    def execute(self, command):
-        def none_to_null(command):
-            return command.replace("None", "NULL")
-        command = none_to_null(command)
-        logger.debug("SQL EXECUTE: {}".format(command))
-        self.db_conn = sqlite3.connect(self.path)
-        self.db_crsr = self.db_conn.cursor()
-        try:
-            self.db_crsr.execute(command)
-        except Exception as e:
-            logger.error(e)
-
-    def get(self, command):
-        self.execute(command)
-        result = self.db_crsr.fetchall()
-        logger.info("SQL RESULT for {}:".format(command))
-        logger.info("\n".join(str(r) for r in result))
-        return result
-    
-    def set(self, command):
-        self.execute(command)
-        self.db_conn.commit()
-        self.db_conn.close()
+    def create_table(self, prefix, src, if_exists=True):
+        name = "_".join([prefix, src.name])
+        table = Table(name, self.metadata)
+        if name in self.tables:
+            if if_exists:
+                logger.warning("Dropping {} table from {}".format(name, self.url))
+                table.drop(self.engine)
+            else:
+                logger.warning("Dropping {} table from {}".format(name, self.url))
+                return table
+        for column in src.columns:
+            logger.debug("""
+                        Creating table {table_name}.
+                        Adding [column:'{column}',
+                        type:{_type},
+                        primary_key:{primary_key},
+                        nullable:{nullable},
+                        foreign_keys:{foreign_keys}]
+                        """
+                        .format(table_name=name,
+                                column=column.name,
+                                _type=column.type,
+                                primary_key=column.primary_key,
+                                nullable=column.nullable,
+                                foreign_keys=column.foreign_keys)
+                         )
+            table.append_column(column.copy())
+        table.create(checkfirst=True)
+        return table
 
     @property
     def tables(self):
-        tables = self.get("SELECT name FROM sqlite_master WHERE type='table';")
-        return list(map(lambda table: table[0], tables))
+        return self.engine.table_names()
 
-class Table():
-    def __init__ (self, name, db):
-        logger.info("New table created with name = {}, db = {}".format(name, db.path))
-        self.name = name
-        self.db = db
-
-    @property
-    def columns(self):
-        columns = self.db.get("SELECT name FROM pragma_table_info('{}')".format(self.name))
-        return list(map(lambda column: column[0], columns)) 
-
-    @property
-    def npk_columns(self):
-        columns = self.db.get("SELECT name FROM pragma_table_info('{}') WHERE pk=0".format(self.name))
-        return list(map(lambda column: column[0], columns)) 
-
-    @property
-    def rows(self):
-        rows = self.db.get("SELECT * FROM '{}'".format(self.name))
-        return rows
-
-    @property
-    def primary_key(self):
-        pk = self.db.get("SELECT name FROM pragma_table_info('{}') WHERE pk=1".format(self.name))
-        return pk[0][0]
-
-class ETL_Table(Table):
-    def __init__ (self, source_table, prefix, db, write=True):
-        self.name = "_".join([prefix, source_table.name])
-        self.db = db
-        logger.info("New ETL table created with name = {}, db = {}".format(self.name, db.path))
-        if write or self.name not in self.db.tables:
-            self.create_from_table(source_table)
-
-    def create_from_table(self, source_table):
-        self.db.set("DROP TABLE IF EXISTS {}".format(self.name))
-        command = source_table.db.get("SELECT sql FROM sqlite_master WHERE tbl_name='{}'".format(source_table.name))[0][0]
-        command = command.replace(source_table.name, self.name, 1)
-        self.db.set(command)
-
-    def insert_values(self, values):
-        logger.info("{} inserted \n{}".format(self.name, "\n".join(str(v) for v in values)))
-        columns = ",".join(list(map(lambda column: "'" + column + "'", self.columns)))
-        values = ",\n".join(str(v) for v in values)
-        command = "INSERT INTO '{}' ({}) \nVALUES \n{}".format(self.name, columns, values)
-        self.db.set("INSERT INTO '{}' ({}) \nVALUES \n{}".format(self.name, columns, values))
-
-    def delete_values(self, values):
-        logger.info("{} removed \n{}".format(self.name, "\n".join(str(v) for v in values)))
-        for value in values:
-            v = [str(self.columns[enum[0]]) + " = '" + str(enum[1]) + "'" for enum in enumerate(list(value))]
-            command = """
-                    DELETE FROM '{table}'
-                    WHERE {v}
-                    """.format(table = self.name, v = " AND ".join(v))
-            command = re.sub(r"\'(\d+)\'", r"\1", command)
-            command =  re.sub(r"= 'None'", "IS NULL", command)
-            self.db.set(command)
-
-class Extractor():
-    def __init__ (self, source_table, db):
-        logger.info("New Extractor created for table = {}, db = {}".format(source_table.name, db.path))
-        self.source_table = source_table
-        self.db = db
-
-    def load_s_table(self):
-        s_table = ETL_Table(self.source_table, "S", self.db, True)
-        s_table.insert_values(self.source_table.rows)
-        return s_table
-
-    def get_difference(self, a_table, b_table):
-        x_table = ETL_Table(self.source_table, "X", self.db, True)
-        values = a_table.rows
-        try:
-            values = list(set(a_table.rows) - set(b_table.rows))
-            logger.debug("Extractor: {} minus {}: {}".format(a_table.name, b_table.name, values))
-        except Exception as e:
-            logger.info("Extractor: No existing {}".format(b_table.name, x_table.name))
-
-            logger.error(e)
-        x_table.insert_values(values)
-        return x_table
-
-    def clean_rows(self, table):
-        e_table = ETL_Table(self.source_table, "E", self.db, True)
-        c_table = ETL_Table(self.source_table, "C", self.db, True)
-
-        # NULL and MISSING
-        for col in table.columns:
-            self.db.set("UPDATE '{table}' SET {col} = 'Unknown Value' WHERE {col} IS NULL".format(table = table.name, col=col))
-            self.db.set("UPDATE '{table}' SET {col} = 'Missing Value' WHERE {col} IS NULL".format(table = table.name, col=col))
-
-        # DUPLICATES
-        columns = ", ".join(table.npk_columns) # join tables except for id
-        duplicates = self.db.get("SELECT {cols} FROM '{table}' GROUP BY {cols} HAVING COUNT(*) > 1".format(table = table.name, cols = columns))
-        for duplicate in duplicates:
-            duplicate_condition = [str(table.npk_columns[enum[0]]) + " = '" + str(enum[1]) + "'" for enum in enumerate(duplicate)]
-            command = "SELECT * FROM '{table}' WHERE {duplicate_condition}".format(table = table.name, duplicate_condition = " AND ".join(duplicate_condition))
-            command = re.sub(r"\'(\d+)\'", r"\1", command)
-            command =  re.sub(r"= 'None'", "IS NULL", command)
-            rows = self.db.get(command)
-            e_table.insert_values(rows)
-            table.delete_values(rows)
-
-        # MOVE TO CLEAN TABLE
-        c_table.insert_values(table.rows)
-
-        return [e_table, c_table]
+# class Table:
+    # def __init__ (self, table, db):
+        # self.table = table
+        # self.db = db
+        # self.name = table.name
+        # self.engine = table.metadata.bind.engine
+        # self.df = pd.read_sql_table(self.name, self.engine)
 
 if __name__ == "__main__":
-    source_path = sys.argv[1]
-    dest_path = sys.argv[2]
-    source_db = Db(source_path)
-    dest_db = Db(dest_path)
+    source_file = sys.argv[1]
+    dest_file = sys.argv[2]
+    source_db = Db(source_file)
+    dest_db = Db(dest_file)
 
     try:
-        os.remove(os.getcwd()+"/"+dest_path)
+        path = os.getcwd()+"/"+dest_file
+        logger.warning("Removing {}".format(path))
+        os.remove(path)
     except:
         pass
 
-    for t in source_db.tables:
-        table = Table(t, source_db)
-        extractor = Extractor(table, dest_db)
-        s_table = extractor.load_s_table()
-        m_table = ETL_Table(table, "M", dest_db, False)
-        x_table = extractor.get_difference(s_table, m_table)
-        e_table, c_table = extractor.clean_rows(x_table)
-        m_table.insert_values(c_table.rows)
+    # for table_name in source_db.tables:
+    table_name = "Employee"
+
+    table = Table(table_name, source_db.metadata, autoload=True, autoload_with=source_db.engine)
+    src_df = pd.read_sql_table(table.name, source_db.url)
+    s_table = dest_db.create_table("S", table, True)
+    m_table = dest_db.create_table("M", table, False)
+    try:
+        src_df.to_sql(s_table.name, dest_db.url, if_exists='append', index=False)
+    except Exception as e:
+        logger.error(e)
+    finally:
+        s_df = pd.read_sql_table(s_table.name, dest_db.url)
+    s_df = pd.read_sql_table(s_table.name, dest_db.url)
+    m_df = pd.read_sql_table(m_table.name, dest_db.url)
+
+    # get x_table
+    x_df = pd.concat([s_df,m_df]).drop_duplicates(keep=False)
+    # clean x_table
+    pk = str(s_table.primary_key.columns.values()[0].name)
+    subset = list(s_df.columns)
+    subset.remove(pk)
+    c_df = x_df.drop_duplicates(subset=subset, keep=False)
+    c_df = c_df.fillna(-1)
+    c_df = c_df.replace("", "Missing")
+    print(c_df)
+    duplicates = x_df.duplicated(subset=subset, keep=False)
+    e_df = x_df[duplicates]
+    # e_table
+    # c_table
+    # table = Table(t, source_db)
+    # extractor = Extractor(table, dest_db)
+    # s_table = extractor.load_s_table()
+    # m_table = ETL_Table(table, "M", dest_db, False)
+    # x_table = extractor.get_difference(s_table, m_table)
+    # e_table, c_table = extractor.clean_rows(x_table)
+    # m_table.insert_values(c_table.rows)
