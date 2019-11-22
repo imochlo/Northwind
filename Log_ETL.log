@@ -1,5 +1,6 @@
-2019-11-22 00:59:40,652 ETL_Log[74] WARNING: Removing /run/media/sam/Data/dev/Northwind/new.db
-2019-11-22 00:59:40,672 ETL_Log[48] DEBUG: 
+2019-11-22 12:54:08,243 ETL_Log[82] WARNING: Removing /home/ejsbsolis/dev/Northwind/new.db
+2019-11-22 12:54:08,277 ETL_Log[25] DEBUG: Creating table S_Employee from Employee
+2019-11-22 12:54:08,278 ETL_Log[47] DEBUG: 
                         Creating table S_Employee.
                         Adding [column:'Id',
                         type:INTEGER,
@@ -7,7 +8,7 @@
                         nullable:False,
                         foreign_keys:set()]
                         
-2019-11-22 00:59:40,672 ETL_Log[48] DEBUG: 
+2019-11-22 12:54:08,281 ETL_Log[47] DEBUG: 
                         Creating table S_Employee.
                         Adding [column:'LastName',
                         type:VARCHAR(8000),
@@ -15,7 +16,7 @@
                         nullable:True,
                         foreign_keys:set()]
                         
-2019-11-22 00:59:40,673 ETL_Log[48] DEBUG: 
+2019-11-22 12:54:08,281 ETL_Log[47] DEBUG: 
                         Creating table S_Employee.
                         Adding [column:'FirstName',
                         type:VARCHAR(8000),
@@ -23,7 +24,7 @@
                         nullable:True,
                         foreign_keys:set()]
                         
-2019-11-22 00:59:40,673 ETL_Log[48] DEBUG: 
+2019-11-22 12:54:08,281 ETL_Log[47] DEBUG: 
                         Creating table S_Employee.
                         Adding [column:'Title',
                         type:VARCHAR(8000),
@@ -31,7 +32,7 @@
                         nullable:True,
                         foreign_keys:set()]
                         
-2019-11-22 00:59:40,673 ETL_Log[48] DEBUG: 
+2019-11-22 12:54:08,281 ETL_Log[47] DEBUG: 
                         Creating table S_Employee.
                         Adding [column:'TitleOfCourtesy',
                         type:VARCHAR(8000),
@@ -39,7 +40,7 @@
                         nullable:True,
                         foreign_keys:set()]
                         
-2019-11-22 00:59:40,673 ETL_Log[48] DEBUG: 
+2019-11-22 12:54:08,282 ETL_Log[47] DEBUG: 
                         Creating table S_Employee.
                         Adding [column:'BirthDate',
                         type:VARCHAR(8000),
@@ -47,7 +48,7 @@
                         nullable:True,
                         foreign_keys:set()]
                         
-2019-11-22 00:59:40,673 ETL_Log[48] DEBUG: 
+2019-11-22 12:54:08,282 ETL_Log[47] DEBUG: 
                         Creating table S_Employee.
                         Adding [column:'HireDate',
                         type:VARCHAR(8000),
@@ -55,7 +56,7 @@
                         nullable:True,
                         foreign_keys:set()]
                         
-2019-11-22 00:59:40,673 ETL_Log[48] DEBUG: 
+2019-11-22 12:54:08,282 ETL_Log[47] DEBUG: 
                         Creating table S_Employee.
                         Adding [column:'Address',
                         type:VARCHAR(8000),
@@ -63,7 +64,7 @@
                         nullable:True,
                         foreign_keys:set()]
                         
-2019-11-22 00:59:40,674 ETL_Log[48] DEBUG: 
+2019-11-22 12:54:08,282 ETL_Log[47] DEBUG: 
                         Creating table S_Employee.
                         Adding [column:'City',
                         type:VARCHAR(8000),
@@ -71,7 +72,7 @@
                         nullable:True,
                         foreign_keys:set()]
                         
-2019-11-22 00:59:40,674 ETL_Log[48] DEBUG: 
+2019-11-22 12:54:08,283 ETL_Log[47] DEBUG: 
                         Creating table S_Employee.
                         Adding [column:'Region',
                         type:VARCHAR(8000),
@@ -79,7 +80,7 @@
                         nullable:True,
                         foreign_keys:set()]
                         
-2019-11-22 00:59:40,674 ETL_Log[48] DEBUG: 
+2019-11-22 12:54:08,283 ETL_Log[47] DEBUG: 
                         Creating table S_Employee.
                         Adding [column:'PostalCode',
                         type:VARCHAR(8000),
@@ -87,7 +88,7 @@
                         nullable:True,
                         foreign_keys:set()]
                         
-2019-11-22 00:59:40,674 ETL_Log[48] DEBUG: 
+2019-11-22 12:54:08,283 ETL_Log[47] DEBUG: 
                         Creating table S_Employee.
                         Adding [column:'Country',
                         type:VARCHAR(8000),
@@ -95,7 +96,7 @@
                         nullable:True,
                         foreign_keys:set()]
                         
-2019-11-22 00:59:40,674 ETL_Log[48] DEBUG: 
+2019-11-22 12:54:08,284 ETL_Log[47] DEBUG: 
                         Creating table S_Employee.
                         Adding [column:'HomePhone',
                         type:VARCHAR(8000),
@@ -103,7 +104,7 @@
                         nullable:True,
                         foreign_keys:set()]
                         
-2019-11-22 00:59:40,674 ETL_Log[48] DEBUG: 
+2019-11-22 12:54:08,284 ETL_Log[47] DEBUG: 
                         Creating table S_Employee.
                         Adding [column:'Extension',
                         type:VARCHAR(8000),
@@ -111,7 +112,7 @@
                         nullable:True,
                         foreign_keys:set()]
                         
-2019-11-22 00:59:40,675 ETL_Log[48] DEBUG: 
+2019-11-22 12:54:08,284 ETL_Log[47] DEBUG: 
                         Creating table S_Employee.
                         Adding [column:'Photo',
                         type:BLOB,
@@ -119,7 +120,7 @@
                         nullable:True,
                         foreign_keys:set()]
                         
-2019-11-22 00:59:40,675 ETL_Log[48] DEBUG: 
+2019-11-22 12:54:08,284 ETL_Log[47] DEBUG: 
                         Creating table S_Employee.
                         Adding [column:'Notes',
                         type:VARCHAR(8000),
@@ -127,7 +128,7 @@
                         nullable:True,
                         foreign_keys:set()]
                         
-2019-11-22 00:59:40,675 ETL_Log[48] DEBUG: 
+2019-11-22 12:54:08,285 ETL_Log[47] DEBUG: 
                         Creating table S_Employee.
                         Adding [column:'ReportsTo',
                         type:INTEGER,
@@ -135,7 +136,7 @@
                         nullable:True,
                         foreign_keys:set()]
                         
-2019-11-22 00:59:40,675 ETL_Log[48] DEBUG: 
+2019-11-22 12:54:08,285 ETL_Log[47] DEBUG: 
                         Creating table S_Employee.
                         Adding [column:'PhotoPath',
                         type:VARCHAR(8000),
@@ -143,7 +144,8 @@
                         nullable:True,
                         foreign_keys:set()]
                         
-2019-11-22 00:59:40,871 ETL_Log[48] DEBUG: 
+2019-11-22 12:54:08,350 ETL_Log[25] DEBUG: Creating table M_Employee from Employee
+2019-11-22 12:54:08,352 ETL_Log[47] DEBUG: 
                         Creating table M_Employee.
                         Adding [column:'Id',
                         type:INTEGER,
@@ -151,7 +153,7 @@
                         nullable:False,
                         foreign_keys:set()]
                         
-2019-11-22 00:59:40,871 ETL_Log[48] DEBUG: 
+2019-11-22 12:54:08,353 ETL_Log[47] DEBUG: 
                         Creating table M_Employee.
                         Adding [column:'LastName',
                         type:VARCHAR(8000),
@@ -159,7 +161,7 @@
                         nullable:True,
                         foreign_keys:set()]
                         
-2019-11-22 00:59:40,872 ETL_Log[48] DEBUG: 
+2019-11-22 12:54:08,354 ETL_Log[47] DEBUG: 
                         Creating table M_Employee.
                         Adding [column:'FirstName',
                         type:VARCHAR(8000),
@@ -167,7 +169,7 @@
                         nullable:True,
                         foreign_keys:set()]
                         
-2019-11-22 00:59:40,872 ETL_Log[48] DEBUG: 
+2019-11-22 12:54:08,355 ETL_Log[47] DEBUG: 
                         Creating table M_Employee.
                         Adding [column:'Title',
                         type:VARCHAR(8000),
@@ -175,7 +177,7 @@
                         nullable:True,
                         foreign_keys:set()]
                         
-2019-11-22 00:59:40,872 ETL_Log[48] DEBUG: 
+2019-11-22 12:54:08,358 ETL_Log[47] DEBUG: 
                         Creating table M_Employee.
                         Adding [column:'TitleOfCourtesy',
                         type:VARCHAR(8000),
@@ -183,7 +185,7 @@
                         nullable:True,
                         foreign_keys:set()]
                         
-2019-11-22 00:59:40,873 ETL_Log[48] DEBUG: 
+2019-11-22 12:54:08,359 ETL_Log[47] DEBUG: 
                         Creating table M_Employee.
                         Adding [column:'BirthDate',
                         type:VARCHAR(8000),
@@ -191,7 +193,7 @@
                         nullable:True,
                         foreign_keys:set()]
                         
-2019-11-22 00:59:40,873 ETL_Log[48] DEBUG: 
+2019-11-22 12:54:08,360 ETL_Log[47] DEBUG: 
                         Creating table M_Employee.
                         Adding [column:'HireDate',
                         type:VARCHAR(8000),
@@ -199,7 +201,7 @@
                         nullable:True,
                         foreign_keys:set()]
                         
-2019-11-22 00:59:40,873 ETL_Log[48] DEBUG: 
+2019-11-22 12:54:08,361 ETL_Log[47] DEBUG: 
                         Creating table M_Employee.
                         Adding [column:'Address',
                         type:VARCHAR(8000),
@@ -207,7 +209,7 @@
                         nullable:True,
                         foreign_keys:set()]
                         
-2019-11-22 00:59:40,873 ETL_Log[48] DEBUG: 
+2019-11-22 12:54:08,363 ETL_Log[47] DEBUG: 
                         Creating table M_Employee.
                         Adding [column:'City',
                         type:VARCHAR(8000),
@@ -215,7 +217,7 @@
                         nullable:True,
                         foreign_keys:set()]
                         
-2019-11-22 00:59:40,873 ETL_Log[48] DEBUG: 
+2019-11-22 12:54:08,364 ETL_Log[47] DEBUG: 
                         Creating table M_Employee.
                         Adding [column:'Region',
                         type:VARCHAR(8000),
@@ -223,7 +225,7 @@
                         nullable:True,
                         foreign_keys:set()]
                         
-2019-11-22 00:59:40,873 ETL_Log[48] DEBUG: 
+2019-11-22 12:54:08,365 ETL_Log[47] DEBUG: 
                         Creating table M_Employee.
                         Adding [column:'PostalCode',
                         type:VARCHAR(8000),
@@ -231,7 +233,7 @@
                         nullable:True,
                         foreign_keys:set()]
                         
-2019-11-22 00:59:40,874 ETL_Log[48] DEBUG: 
+2019-11-22 12:54:08,366 ETL_Log[47] DEBUG: 
                         Creating table M_Employee.
                         Adding [column:'Country',
                         type:VARCHAR(8000),
@@ -239,7 +241,7 @@
                         nullable:True,
                         foreign_keys:set()]
                         
-2019-11-22 00:59:40,874 ETL_Log[48] DEBUG: 
+2019-11-22 12:54:08,367 ETL_Log[47] DEBUG: 
                         Creating table M_Employee.
                         Adding [column:'HomePhone',
                         type:VARCHAR(8000),
@@ -247,7 +249,7 @@
                         nullable:True,
                         foreign_keys:set()]
                         
-2019-11-22 00:59:40,874 ETL_Log[48] DEBUG: 
+2019-11-22 12:54:08,368 ETL_Log[47] DEBUG: 
                         Creating table M_Employee.
                         Adding [column:'Extension',
                         type:VARCHAR(8000),
@@ -255,7 +257,7 @@
                         nullable:True,
                         foreign_keys:set()]
                         
-2019-11-22 00:59:40,874 ETL_Log[48] DEBUG: 
+2019-11-22 12:54:08,368 ETL_Log[47] DEBUG: 
                         Creating table M_Employee.
                         Adding [column:'Photo',
                         type:BLOB,
@@ -263,7 +265,7 @@
                         nullable:True,
                         foreign_keys:set()]
                         
-2019-11-22 00:59:40,874 ETL_Log[48] DEBUG: 
+2019-11-22 12:54:08,369 ETL_Log[47] DEBUG: 
                         Creating table M_Employee.
                         Adding [column:'Notes',
                         type:VARCHAR(8000),
@@ -271,7 +273,7 @@
                         nullable:True,
                         foreign_keys:set()]
                         
-2019-11-22 00:59:40,874 ETL_Log[48] DEBUG: 
+2019-11-22 12:54:08,370 ETL_Log[47] DEBUG: 
                         Creating table M_Employee.
                         Adding [column:'ReportsTo',
                         type:INTEGER,
@@ -279,8 +281,443 @@
                         nullable:True,
                         foreign_keys:set()]
                         
-2019-11-22 00:59:40,874 ETL_Log[48] DEBUG: 
+2019-11-22 12:54:08,370 ETL_Log[47] DEBUG: 
                         Creating table M_Employee.
+                        Adding [column:'PhotoPath',
+                        type:VARCHAR(8000),
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,515 ETL_Log[25] DEBUG: Creating table X_Employee from Employee
+2019-11-22 12:54:08,516 ETL_Log[47] DEBUG: 
+                        Creating table X_Employee.
+                        Adding [column:'Id',
+                        type:INTEGER,
+                        primary_key:True,
+                        nullable:False,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,517 ETL_Log[47] DEBUG: 
+                        Creating table X_Employee.
+                        Adding [column:'LastName',
+                        type:VARCHAR(8000),
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,517 ETL_Log[47] DEBUG: 
+                        Creating table X_Employee.
+                        Adding [column:'FirstName',
+                        type:VARCHAR(8000),
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,517 ETL_Log[47] DEBUG: 
+                        Creating table X_Employee.
+                        Adding [column:'Title',
+                        type:VARCHAR(8000),
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,518 ETL_Log[47] DEBUG: 
+                        Creating table X_Employee.
+                        Adding [column:'TitleOfCourtesy',
+                        type:VARCHAR(8000),
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,518 ETL_Log[47] DEBUG: 
+                        Creating table X_Employee.
+                        Adding [column:'BirthDate',
+                        type:VARCHAR(8000),
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,518 ETL_Log[47] DEBUG: 
+                        Creating table X_Employee.
+                        Adding [column:'HireDate',
+                        type:VARCHAR(8000),
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,518 ETL_Log[47] DEBUG: 
+                        Creating table X_Employee.
+                        Adding [column:'Address',
+                        type:VARCHAR(8000),
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,518 ETL_Log[47] DEBUG: 
+                        Creating table X_Employee.
+                        Adding [column:'City',
+                        type:VARCHAR(8000),
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,519 ETL_Log[47] DEBUG: 
+                        Creating table X_Employee.
+                        Adding [column:'Region',
+                        type:VARCHAR(8000),
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,519 ETL_Log[47] DEBUG: 
+                        Creating table X_Employee.
+                        Adding [column:'PostalCode',
+                        type:VARCHAR(8000),
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,519 ETL_Log[47] DEBUG: 
+                        Creating table X_Employee.
+                        Adding [column:'Country',
+                        type:VARCHAR(8000),
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,519 ETL_Log[47] DEBUG: 
+                        Creating table X_Employee.
+                        Adding [column:'HomePhone',
+                        type:VARCHAR(8000),
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,520 ETL_Log[47] DEBUG: 
+                        Creating table X_Employee.
+                        Adding [column:'Extension',
+                        type:VARCHAR(8000),
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,520 ETL_Log[47] DEBUG: 
+                        Creating table X_Employee.
+                        Adding [column:'Photo',
+                        type:BLOB,
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,520 ETL_Log[47] DEBUG: 
+                        Creating table X_Employee.
+                        Adding [column:'Notes',
+                        type:VARCHAR(8000),
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,520 ETL_Log[47] DEBUG: 
+                        Creating table X_Employee.
+                        Adding [column:'ReportsTo',
+                        type:INTEGER,
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,521 ETL_Log[47] DEBUG: 
+                        Creating table X_Employee.
+                        Adding [column:'PhotoPath',
+                        type:VARCHAR(8000),
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,663 ETL_Log[25] DEBUG: Creating table C_Employee from Employee
+2019-11-22 12:54:08,664 ETL_Log[47] DEBUG: 
+                        Creating table C_Employee.
+                        Adding [column:'Id',
+                        type:INTEGER,
+                        primary_key:True,
+                        nullable:False,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,664 ETL_Log[47] DEBUG: 
+                        Creating table C_Employee.
+                        Adding [column:'LastName',
+                        type:VARCHAR(8000),
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,665 ETL_Log[47] DEBUG: 
+                        Creating table C_Employee.
+                        Adding [column:'FirstName',
+                        type:VARCHAR(8000),
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,665 ETL_Log[47] DEBUG: 
+                        Creating table C_Employee.
+                        Adding [column:'Title',
+                        type:VARCHAR(8000),
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,666 ETL_Log[47] DEBUG: 
+                        Creating table C_Employee.
+                        Adding [column:'TitleOfCourtesy',
+                        type:VARCHAR(8000),
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,666 ETL_Log[47] DEBUG: 
+                        Creating table C_Employee.
+                        Adding [column:'BirthDate',
+                        type:VARCHAR(8000),
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,666 ETL_Log[47] DEBUG: 
+                        Creating table C_Employee.
+                        Adding [column:'HireDate',
+                        type:VARCHAR(8000),
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,666 ETL_Log[47] DEBUG: 
+                        Creating table C_Employee.
+                        Adding [column:'Address',
+                        type:VARCHAR(8000),
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,667 ETL_Log[47] DEBUG: 
+                        Creating table C_Employee.
+                        Adding [column:'City',
+                        type:VARCHAR(8000),
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,667 ETL_Log[47] DEBUG: 
+                        Creating table C_Employee.
+                        Adding [column:'Region',
+                        type:VARCHAR(8000),
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,667 ETL_Log[47] DEBUG: 
+                        Creating table C_Employee.
+                        Adding [column:'PostalCode',
+                        type:VARCHAR(8000),
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,667 ETL_Log[47] DEBUG: 
+                        Creating table C_Employee.
+                        Adding [column:'Country',
+                        type:VARCHAR(8000),
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,667 ETL_Log[47] DEBUG: 
+                        Creating table C_Employee.
+                        Adding [column:'HomePhone',
+                        type:VARCHAR(8000),
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,668 ETL_Log[47] DEBUG: 
+                        Creating table C_Employee.
+                        Adding [column:'Extension',
+                        type:VARCHAR(8000),
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,668 ETL_Log[47] DEBUG: 
+                        Creating table C_Employee.
+                        Adding [column:'Photo',
+                        type:BLOB,
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,668 ETL_Log[47] DEBUG: 
+                        Creating table C_Employee.
+                        Adding [column:'Notes',
+                        type:VARCHAR(8000),
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,668 ETL_Log[47] DEBUG: 
+                        Creating table C_Employee.
+                        Adding [column:'ReportsTo',
+                        type:INTEGER,
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,668 ETL_Log[47] DEBUG: 
+                        Creating table C_Employee.
+                        Adding [column:'PhotoPath',
+                        type:VARCHAR(8000),
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,745 ETL_Log[25] DEBUG: Creating table E_Employee from Employee
+2019-11-22 12:54:08,746 ETL_Log[47] DEBUG: 
+                        Creating table E_Employee.
+                        Adding [column:'Id',
+                        type:INTEGER,
+                        primary_key:True,
+                        nullable:False,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,746 ETL_Log[47] DEBUG: 
+                        Creating table E_Employee.
+                        Adding [column:'LastName',
+                        type:VARCHAR(8000),
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,746 ETL_Log[47] DEBUG: 
+                        Creating table E_Employee.
+                        Adding [column:'FirstName',
+                        type:VARCHAR(8000),
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,747 ETL_Log[47] DEBUG: 
+                        Creating table E_Employee.
+                        Adding [column:'Title',
+                        type:VARCHAR(8000),
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,747 ETL_Log[47] DEBUG: 
+                        Creating table E_Employee.
+                        Adding [column:'TitleOfCourtesy',
+                        type:VARCHAR(8000),
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,748 ETL_Log[47] DEBUG: 
+                        Creating table E_Employee.
+                        Adding [column:'BirthDate',
+                        type:VARCHAR(8000),
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,748 ETL_Log[47] DEBUG: 
+                        Creating table E_Employee.
+                        Adding [column:'HireDate',
+                        type:VARCHAR(8000),
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,748 ETL_Log[47] DEBUG: 
+                        Creating table E_Employee.
+                        Adding [column:'Address',
+                        type:VARCHAR(8000),
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,748 ETL_Log[47] DEBUG: 
+                        Creating table E_Employee.
+                        Adding [column:'City',
+                        type:VARCHAR(8000),
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,749 ETL_Log[47] DEBUG: 
+                        Creating table E_Employee.
+                        Adding [column:'Region',
+                        type:VARCHAR(8000),
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,749 ETL_Log[47] DEBUG: 
+                        Creating table E_Employee.
+                        Adding [column:'PostalCode',
+                        type:VARCHAR(8000),
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,749 ETL_Log[47] DEBUG: 
+                        Creating table E_Employee.
+                        Adding [column:'Country',
+                        type:VARCHAR(8000),
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,749 ETL_Log[47] DEBUG: 
+                        Creating table E_Employee.
+                        Adding [column:'HomePhone',
+                        type:VARCHAR(8000),
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,750 ETL_Log[47] DEBUG: 
+                        Creating table E_Employee.
+                        Adding [column:'Extension',
+                        type:VARCHAR(8000),
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,750 ETL_Log[47] DEBUG: 
+                        Creating table E_Employee.
+                        Adding [column:'Photo',
+                        type:BLOB,
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,751 ETL_Log[47] DEBUG: 
+                        Creating table E_Employee.
+                        Adding [column:'Notes',
+                        type:VARCHAR(8000),
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,751 ETL_Log[47] DEBUG: 
+                        Creating table E_Employee.
+                        Adding [column:'ReportsTo',
+                        type:INTEGER,
+                        primary_key:False,
+                        nullable:True,
+                        foreign_keys:set()]
+                        
+2019-11-22 12:54:08,751 ETL_Log[47] DEBUG: 
+                        Creating table E_Employee.
                         Adding [column:'PhotoPath',
                         type:VARCHAR(8000),
                         primary_key:False,
