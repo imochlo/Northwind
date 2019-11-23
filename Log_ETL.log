@@ -1,726 +1,366 @@
-2019-11-22 12:54:08,243 ETL_Log[82] WARNING: Removing /home/ejsbsolis/dev/Northwind/new.db
-2019-11-22 12:54:08,277 ETL_Log[25] DEBUG: Creating table S_Employee from Employee
-2019-11-22 12:54:08,278 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:49,568 ETL_Log[71] WARNING: Removing /run/media/sam/Data/dev/Northwind/new.db
+2019-11-23 00:03:49,600 ETL_Log[25] DEBUG: Creating table S_Employee from Employee
+2019-11-23 00:03:49,606 ETL_Log[43] DEBUG: 
                         Creating table S_Employee.
-                        Adding [column:'Id',
-                        type:INTEGER,
-                        primary_key:True,
-                        nullable:False,
-                        foreign_keys:set()]
+                        Values = {'name': 'Id', 'type': INTEGER(), 'primary_key': True, 'nullable': False, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,281 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:49,606 ETL_Log[43] DEBUG: 
                         Creating table S_Employee.
-                        Adding [column:'LastName',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'LastName', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,281 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:49,606 ETL_Log[43] DEBUG: 
                         Creating table S_Employee.
-                        Adding [column:'FirstName',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'FirstName', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,281 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:49,607 ETL_Log[43] DEBUG: 
                         Creating table S_Employee.
-                        Adding [column:'Title',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'Title', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,281 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:49,607 ETL_Log[43] DEBUG: 
                         Creating table S_Employee.
-                        Adding [column:'TitleOfCourtesy',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'TitleOfCourtesy', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,282 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:49,607 ETL_Log[43] DEBUG: 
                         Creating table S_Employee.
-                        Adding [column:'BirthDate',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'BirthDate', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,282 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:49,607 ETL_Log[43] DEBUG: 
                         Creating table S_Employee.
-                        Adding [column:'HireDate',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'HireDate', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,282 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:49,608 ETL_Log[43] DEBUG: 
                         Creating table S_Employee.
-                        Adding [column:'Address',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'Address', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,282 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:49,608 ETL_Log[43] DEBUG: 
                         Creating table S_Employee.
-                        Adding [column:'City',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'City', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,283 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:49,608 ETL_Log[43] DEBUG: 
                         Creating table S_Employee.
-                        Adding [column:'Region',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'Region', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,283 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:49,609 ETL_Log[43] DEBUG: 
                         Creating table S_Employee.
-                        Adding [column:'PostalCode',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'PostalCode', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,283 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:49,609 ETL_Log[43] DEBUG: 
                         Creating table S_Employee.
-                        Adding [column:'Country',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'Country', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,284 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:49,609 ETL_Log[43] DEBUG: 
                         Creating table S_Employee.
-                        Adding [column:'HomePhone',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'HomePhone', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,284 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:49,609 ETL_Log[43] DEBUG: 
                         Creating table S_Employee.
-                        Adding [column:'Extension',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'Extension', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,284 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:49,609 ETL_Log[43] DEBUG: 
                         Creating table S_Employee.
-                        Adding [column:'Photo',
-                        type:BLOB,
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'Photo', 'type': BLOB(), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,284 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:49,610 ETL_Log[43] DEBUG: 
                         Creating table S_Employee.
-                        Adding [column:'Notes',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'Notes', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,285 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:49,610 ETL_Log[43] DEBUG: 
                         Creating table S_Employee.
-                        Adding [column:'ReportsTo',
-                        type:INTEGER,
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'ReportsTo', 'type': INTEGER(), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,285 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:49,610 ETL_Log[43] DEBUG: 
                         Creating table S_Employee.
-                        Adding [column:'PhotoPath',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'PhotoPath', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,350 ETL_Log[25] DEBUG: Creating table M_Employee from Employee
-2019-11-22 12:54:08,352 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:49,784 ETL_Log[25] DEBUG: Creating table M_Employee from Employee
+2019-11-23 00:03:49,787 ETL_Log[43] DEBUG: 
                         Creating table M_Employee.
-                        Adding [column:'Id',
-                        type:INTEGER,
-                        primary_key:True,
-                        nullable:False,
-                        foreign_keys:set()]
+                        Values = {'name': 'Id', 'type': INTEGER(), 'primary_key': True, 'nullable': False, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,353 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:49,787 ETL_Log[43] DEBUG: 
                         Creating table M_Employee.
-                        Adding [column:'LastName',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'LastName', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,354 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:49,788 ETL_Log[43] DEBUG: 
                         Creating table M_Employee.
-                        Adding [column:'FirstName',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'FirstName', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,355 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:49,789 ETL_Log[43] DEBUG: 
                         Creating table M_Employee.
-                        Adding [column:'Title',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'Title', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,358 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:49,791 ETL_Log[43] DEBUG: 
                         Creating table M_Employee.
-                        Adding [column:'TitleOfCourtesy',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'TitleOfCourtesy', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,359 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:49,791 ETL_Log[43] DEBUG: 
                         Creating table M_Employee.
-                        Adding [column:'BirthDate',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'BirthDate', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,360 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:49,792 ETL_Log[43] DEBUG: 
                         Creating table M_Employee.
-                        Adding [column:'HireDate',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'HireDate', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,361 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:49,792 ETL_Log[43] DEBUG: 
                         Creating table M_Employee.
-                        Adding [column:'Address',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'Address', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,363 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:49,792 ETL_Log[43] DEBUG: 
                         Creating table M_Employee.
-                        Adding [column:'City',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'City', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,364 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:49,793 ETL_Log[43] DEBUG: 
                         Creating table M_Employee.
-                        Adding [column:'Region',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'Region', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,365 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:49,793 ETL_Log[43] DEBUG: 
                         Creating table M_Employee.
-                        Adding [column:'PostalCode',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'PostalCode', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,366 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:49,793 ETL_Log[43] DEBUG: 
                         Creating table M_Employee.
-                        Adding [column:'Country',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'Country', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,367 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:49,794 ETL_Log[43] DEBUG: 
                         Creating table M_Employee.
-                        Adding [column:'HomePhone',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'HomePhone', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,368 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:49,794 ETL_Log[43] DEBUG: 
                         Creating table M_Employee.
-                        Adding [column:'Extension',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'Extension', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,368 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:49,795 ETL_Log[43] DEBUG: 
                         Creating table M_Employee.
-                        Adding [column:'Photo',
-                        type:BLOB,
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'Photo', 'type': BLOB(), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,369 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:49,796 ETL_Log[43] DEBUG: 
                         Creating table M_Employee.
-                        Adding [column:'Notes',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'Notes', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,370 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:49,797 ETL_Log[43] DEBUG: 
                         Creating table M_Employee.
-                        Adding [column:'ReportsTo',
-                        type:INTEGER,
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'ReportsTo', 'type': INTEGER(), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,370 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:49,798 ETL_Log[43] DEBUG: 
                         Creating table M_Employee.
-                        Adding [column:'PhotoPath',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'PhotoPath', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,515 ETL_Log[25] DEBUG: Creating table X_Employee from Employee
-2019-11-22 12:54:08,516 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:50,228 ETL_Log[25] DEBUG: Creating table X_Employee from Employee
+2019-11-23 00:03:50,230 ETL_Log[43] DEBUG: 
                         Creating table X_Employee.
-                        Adding [column:'Id',
-                        type:INTEGER,
-                        primary_key:True,
-                        nullable:False,
-                        foreign_keys:set()]
+                        Values = {'name': 'Id', 'type': INTEGER(), 'primary_key': True, 'nullable': False, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,517 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:50,230 ETL_Log[43] DEBUG: 
                         Creating table X_Employee.
-                        Adding [column:'LastName',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'LastName', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,517 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:50,230 ETL_Log[43] DEBUG: 
                         Creating table X_Employee.
-                        Adding [column:'FirstName',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'FirstName', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,517 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:50,230 ETL_Log[43] DEBUG: 
                         Creating table X_Employee.
-                        Adding [column:'Title',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'Title', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,518 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:50,231 ETL_Log[43] DEBUG: 
                         Creating table X_Employee.
-                        Adding [column:'TitleOfCourtesy',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'TitleOfCourtesy', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,518 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:50,231 ETL_Log[43] DEBUG: 
                         Creating table X_Employee.
-                        Adding [column:'BirthDate',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'BirthDate', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,518 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:50,231 ETL_Log[43] DEBUG: 
                         Creating table X_Employee.
-                        Adding [column:'HireDate',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'HireDate', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,518 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:50,231 ETL_Log[43] DEBUG: 
                         Creating table X_Employee.
-                        Adding [column:'Address',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'Address', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,518 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:50,232 ETL_Log[43] DEBUG: 
                         Creating table X_Employee.
-                        Adding [column:'City',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'City', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,519 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:50,232 ETL_Log[43] DEBUG: 
                         Creating table X_Employee.
-                        Adding [column:'Region',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'Region', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,519 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:50,232 ETL_Log[43] DEBUG: 
                         Creating table X_Employee.
-                        Adding [column:'PostalCode',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'PostalCode', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,519 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:50,232 ETL_Log[43] DEBUG: 
                         Creating table X_Employee.
-                        Adding [column:'Country',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'Country', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,519 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:50,233 ETL_Log[43] DEBUG: 
                         Creating table X_Employee.
-                        Adding [column:'HomePhone',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'HomePhone', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,520 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:50,233 ETL_Log[43] DEBUG: 
                         Creating table X_Employee.
-                        Adding [column:'Extension',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'Extension', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,520 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:50,233 ETL_Log[43] DEBUG: 
                         Creating table X_Employee.
-                        Adding [column:'Photo',
-                        type:BLOB,
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'Photo', 'type': BLOB(), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,520 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:50,234 ETL_Log[43] DEBUG: 
                         Creating table X_Employee.
-                        Adding [column:'Notes',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'Notes', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,520 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:50,234 ETL_Log[43] DEBUG: 
                         Creating table X_Employee.
-                        Adding [column:'ReportsTo',
-                        type:INTEGER,
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'ReportsTo', 'type': INTEGER(), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,521 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:50,235 ETL_Log[43] DEBUG: 
                         Creating table X_Employee.
-                        Adding [column:'PhotoPath',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'PhotoPath', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,663 ETL_Log[25] DEBUG: Creating table C_Employee from Employee
-2019-11-22 12:54:08,664 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:51,246 ETL_Log[25] DEBUG: Creating table C_Employee from Employee
+2019-11-23 00:03:51,247 ETL_Log[43] DEBUG: 
                         Creating table C_Employee.
-                        Adding [column:'Id',
-                        type:INTEGER,
-                        primary_key:True,
-                        nullable:False,
-                        foreign_keys:set()]
+                        Values = {'name': 'Id', 'type': INTEGER(), 'primary_key': True, 'nullable': False, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,664 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:51,248 ETL_Log[43] DEBUG: 
                         Creating table C_Employee.
-                        Adding [column:'LastName',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'LastName', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,665 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:51,248 ETL_Log[43] DEBUG: 
                         Creating table C_Employee.
-                        Adding [column:'FirstName',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'FirstName', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,665 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:51,248 ETL_Log[43] DEBUG: 
                         Creating table C_Employee.
-                        Adding [column:'Title',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'Title', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,666 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:51,249 ETL_Log[43] DEBUG: 
                         Creating table C_Employee.
-                        Adding [column:'TitleOfCourtesy',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'TitleOfCourtesy', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,666 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:51,250 ETL_Log[43] DEBUG: 
                         Creating table C_Employee.
-                        Adding [column:'BirthDate',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'BirthDate', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,666 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:51,251 ETL_Log[43] DEBUG: 
                         Creating table C_Employee.
-                        Adding [column:'HireDate',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'HireDate', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,666 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:51,251 ETL_Log[43] DEBUG: 
                         Creating table C_Employee.
-                        Adding [column:'Address',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'Address', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,667 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:51,252 ETL_Log[43] DEBUG: 
                         Creating table C_Employee.
-                        Adding [column:'City',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'City', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,667 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:51,252 ETL_Log[43] DEBUG: 
                         Creating table C_Employee.
-                        Adding [column:'Region',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'Region', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,667 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:51,253 ETL_Log[43] DEBUG: 
                         Creating table C_Employee.
-                        Adding [column:'PostalCode',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'PostalCode', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,667 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:51,254 ETL_Log[43] DEBUG: 
                         Creating table C_Employee.
-                        Adding [column:'Country',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'Country', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,667 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:51,255 ETL_Log[43] DEBUG: 
                         Creating table C_Employee.
-                        Adding [column:'HomePhone',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'HomePhone', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,668 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:51,256 ETL_Log[43] DEBUG: 
                         Creating table C_Employee.
-                        Adding [column:'Extension',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'Extension', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,668 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:51,257 ETL_Log[43] DEBUG: 
                         Creating table C_Employee.
-                        Adding [column:'Photo',
-                        type:BLOB,
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'Photo', 'type': BLOB(), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,668 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:51,258 ETL_Log[43] DEBUG: 
                         Creating table C_Employee.
-                        Adding [column:'Notes',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'Notes', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,668 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:51,259 ETL_Log[43] DEBUG: 
                         Creating table C_Employee.
-                        Adding [column:'ReportsTo',
-                        type:INTEGER,
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'ReportsTo', 'type': INTEGER(), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,668 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:51,259 ETL_Log[43] DEBUG: 
                         Creating table C_Employee.
-                        Adding [column:'PhotoPath',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'PhotoPath', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,745 ETL_Log[25] DEBUG: Creating table E_Employee from Employee
-2019-11-22 12:54:08,746 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:51,645 ETL_Log[25] DEBUG: Creating table E_Employee from Employee
+2019-11-23 00:03:51,649 ETL_Log[43] DEBUG: 
                         Creating table E_Employee.
-                        Adding [column:'Id',
-                        type:INTEGER,
-                        primary_key:True,
-                        nullable:False,
-                        foreign_keys:set()]
+                        Values = {'name': 'Id', 'type': INTEGER(), 'primary_key': True, 'nullable': False, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,746 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:51,650 ETL_Log[43] DEBUG: 
                         Creating table E_Employee.
-                        Adding [column:'LastName',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'LastName', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,746 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:51,650 ETL_Log[43] DEBUG: 
                         Creating table E_Employee.
-                        Adding [column:'FirstName',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'FirstName', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,747 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:51,651 ETL_Log[43] DEBUG: 
                         Creating table E_Employee.
-                        Adding [column:'Title',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'Title', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,747 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:51,652 ETL_Log[43] DEBUG: 
                         Creating table E_Employee.
-                        Adding [column:'TitleOfCourtesy',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'TitleOfCourtesy', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,748 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:51,653 ETL_Log[43] DEBUG: 
                         Creating table E_Employee.
-                        Adding [column:'BirthDate',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'BirthDate', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,748 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:51,653 ETL_Log[43] DEBUG: 
                         Creating table E_Employee.
-                        Adding [column:'HireDate',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'HireDate', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,748 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:51,654 ETL_Log[43] DEBUG: 
                         Creating table E_Employee.
-                        Adding [column:'Address',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'Address', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,748 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:51,654 ETL_Log[43] DEBUG: 
                         Creating table E_Employee.
-                        Adding [column:'City',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'City', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,749 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:51,655 ETL_Log[43] DEBUG: 
                         Creating table E_Employee.
-                        Adding [column:'Region',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'Region', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,749 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:51,655 ETL_Log[43] DEBUG: 
                         Creating table E_Employee.
-                        Adding [column:'PostalCode',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'PostalCode', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,749 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:51,657 ETL_Log[43] DEBUG: 
                         Creating table E_Employee.
-                        Adding [column:'Country',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'Country', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,749 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:51,658 ETL_Log[43] DEBUG: 
                         Creating table E_Employee.
-                        Adding [column:'HomePhone',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'HomePhone', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,750 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:51,659 ETL_Log[43] DEBUG: 
                         Creating table E_Employee.
-                        Adding [column:'Extension',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'Extension', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,750 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:51,659 ETL_Log[43] DEBUG: 
                         Creating table E_Employee.
-                        Adding [column:'Photo',
-                        type:BLOB,
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'Photo', 'type': BLOB(), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,751 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:51,659 ETL_Log[43] DEBUG: 
                         Creating table E_Employee.
-                        Adding [column:'Notes',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'Notes', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,751 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:51,660 ETL_Log[43] DEBUG: 
                         Creating table E_Employee.
-                        Adding [column:'ReportsTo',
-                        type:INTEGER,
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'ReportsTo', 'type': INTEGER(), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         
-2019-11-22 12:54:08,751 ETL_Log[47] DEBUG: 
+2019-11-23 00:03:51,660 ETL_Log[43] DEBUG: 
                         Creating table E_Employee.
-                        Adding [column:'PhotoPath',
-                        type:VARCHAR(8000),
-                        primary_key:False,
-                        nullable:True,
-                        foreign_keys:set()]
+                        Values = {'name': 'PhotoPath', 'type': VARCHAR(length=8000), 'primary_key': False, 'nullable': True, 'foreign_keys': set()}
                         

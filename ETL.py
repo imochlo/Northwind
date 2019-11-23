@@ -33,18 +33,15 @@ class Db:
         for column in src.columns:
             logger.debug("""
                         Creating table {table_name}.
-                        Adding [column:'{column}',
-                        type:{_type},
-                        primary_key:{primary_key},
-                        nullable:{nullable},
-                        foreign_keys:{foreign_keys}]
+                        Values = {values}
                         """
                         .format(table_name=table.name,
-                                column=column.name,
-                                _type=column.type,
-                                primary_key=column.primary_key,
-                                nullable=column.nullable,
-                                foreign_keys=column.foreign_keys)
+                                values={'name':column.name,
+                                        'type':column.type,
+                                        'primary_key':column.primary_key,
+                                        'nullable':column.nullable,
+                                        'foreign_keys':column.foreign_keys}
+                                )
                          )
             table.append_column(column.copy())
         table.create(checkfirst=True)
@@ -62,14 +59,6 @@ class ETL_Table:
         self.name = self.table.name
 
         self.db.create_table(self.table, src, if_exists=if_exists)
-
-# class Table:
-    # def __init__ (self, table, db):
-        # self.table = table
-        # self.db = db
-        # self.name = table.name
-        # self.engine = table.metadata.bind.engine
-        # self.df = pd.read_sql_table(self.name, self.engine)
 
 if __name__ == "__main__":
     source_file = sys.argv[1]
