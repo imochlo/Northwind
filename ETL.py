@@ -6,6 +6,7 @@ import re
 import sqlalchemy as db
 import sqlite3
 import sys
+from datetime import datetime
 
 LOG_FORMAT = "%(asctime)s ETL_Log[%(lineno)d] %(levelname)s: %(message)s"
 logging.basicConfig(filename = os.getcwd()+"/Log_ETL.log",
@@ -30,6 +31,7 @@ class Db:
             logger.info(f"Table {table_name} has data types: {result}")
         except Exception as e:
             logger.error(e)
+            logger.error("Data Types not found")
         finally:
             return result
 
@@ -41,6 +43,7 @@ class Db:
             logger.info(f"Table {table_name} has primary key {result}")
         except Exception as e:
             logger.error(e)
+            logger.error("Primary key not found")
         finally:
             return result
 
@@ -49,73 +52,86 @@ class Db:
         return self.engine.table_names()
 
 class Extractor:
-    def __init__ (self, table_name, src_db, dest_db):
-        self.src_table = table_name
-        self.column_types = src_db.get_dtypes(table_name)
+    def __init__ (self, src_db, dest_db):
         self.src_db = src_db
         self.dest_db = dest_db
-        logger.info(f"Extractor for table {table_name} with source db: {src_db.url} and dest_db: {dest_db.url}")
+        logger.info(f"Extractor created with source db: {src_db.url} and dest_db: {dest_db.url}")
 
-    def copy_table(self, prefix):
-        src_df = pd.read_sql_table(self.src_table, self.src_db.url)
-        table_name = "_".join([prefix, self.src_table])
+    def store_df(self, df, table_name, if_exists='replace'):
+        df.to_sql(table_name, self.dest_db.url, if_exists = if_exists, index=False, dtype=self.column_types)
+        logger.info(f"Extractor {if_exists}(ed) {table_name}\n"
+                    f"{df}")
+        df.name = table_name
+        return df
+
+    def get_diff(self, table, comparator_table):
         result = pd.DataFrame()
+        df = pd.read_sql_table(table, self.dest_db.url)
         try:
-            result = pd.read_sql_table(self.src_table, self.src_db.url)
-            result.to_sql(table_name, self.dest_db.url, if_exists='replace', index=False, dtype=self.column_types)
+            comparator_df = pd.read_sql_table(comparator_table, self.dest_db.url)
         except Exception as e:
+            result = df.copy()
             logger.error(e)
-        finally:
-            logger.info(f"Extractor copied from {self.src_table} to {table_name}\n"
-                        f"{result}")
-            return result
-
-    def get_new_rows(self, prefix, prefix_comparator):
-        name = "_".join([prefix, self.src_table])
-        comparator_name = "_".join([prefix_comparator, self.src_table])
-        df = pd.read_sql_table(name, self.dest_db.url)
-        result = pd.DataFrame()
-        try:
-            comparator_df = pd.read_sql_table(comparator_name, self.dest_db.url)
+            logger.warning(f"Extractor copied rows {table}\n"
+                           f"{result}")
+        else:
             result = pd.concat([df,comparator_df]).drop_duplicates(keep=False)
-        except Exception as e:
-            logger.error(e)
-            result = df
-        finally:
-            logger.info(f"Extractor got new rows in {name} compared with {comparator_name}\n"
+            logger.info(f"Extractor {table} diff with {comparator_table}\n"
                         f"{result}")
+        finally:
             return result
 
-    def clean_rows(self, df):
-        clean = "_".join(["C", self.src_table])
-        error = "_".join(["E", self.src_table])
-        subset = list(df.columns)
-        subset.remove(self.src_db.get_primary_key(self.src_table))
-        duplicates = df.duplicated(subset=subset, keep=False)
-        error_df = df[duplicates]
-        clean_df = df[df[duplicates] == False]
-        for col in clean_df.columns:
-            null_value = "Unknown Value" if (clean_df[col].dtypes == 'object') else -1
-            empty_value = "Missing Value" if (clean_df[col].dtypes == 'object') else -2
+    def get_duplicates(self, df):
+        subset = set(df.columns) - set(self.pk)
+        result = df.duplicated(subset=list(subset), keep=False)
+        logger.info(f"Extractor duplicates {df.name}"
+                    f"{result}")
+        return result
+
+
+    def replace_nulls(self, df):
+        for col in df.columns:
+            null_value = "Unknown Value" if (df[col].dtypes == 'object') else -1
+            empty_value = "Missing Value" if (df[col].dtypes == 'object') else -2
             df[col].fillna(null_value, inplace=True)
             df[col].replace("", empty_value, inplace=True)
-        clean_df.to_sql(clean, self.dest_db.url, if_exists='replace', index=False, dtype=self.column_types)
-        logger.info(f"Extractor got clean rows {clean}"
-                    f"{clean_df}")
-        error_df.to_sql(error, self.dest_db.url, if_exists='replace', index=False, dtype=self.column_types)
-        logger.info(f"Extractor got error rows {error}"
-                    f"{error_df}")
-        return clean_df
+        logger.info(f"Extractor replaced nulls\n"
+                    f"{df}")
+        return df
 
 
-    def extract(self):
-        s_df = self.copy_table("S")
-        x_table = "_".join(["X", self.src_table])
-        x_df = self.get_new_rows("S", "M")
-        x_df.to_sql(x_table, self.dest_db.url, if_exists='replace', index=False, dtype=self.column_types)
-        c_df = self.clean_rows(x_df)
+    def extract(self, table_name):
+        prefix_table = lambda prefix: "_".join([prefix, table_name])
+        try:
+            self.column_types = self.src_db.get_dtypes(table_name)
+            self.pk = self.src_db.get_primary_key(table_name)
+            self.table_name = table_name
+            s_df = pd.read_sql_table(table_name, self.src_db.url)
+        except Exception as e:
+            logger.error(e)
+            logger.critical(f"FAILED TO EXTRACT {table_name}")
+            return
+        else:
+            s_df = self.store_df(s_df, prefix_table("S"), 'replace')
+
+        x_df = self.get_diff(s_df.name, prefix_table("M"))
+        x_df = self.store_df(x_df, prefix_table("X"), 'replace')
+
+        duplicates = self.get_duplicates(x_df)
+        e_df = x_df[duplicates]
+        c_df = x_df[~duplicates]
+        self.store_df(e_df, prefix_table("E"), 'append')
+        self.store_df(c_df, prefix_table("C"), 'replace')
+
+        self.store_df(c_df, prefix_table("M"), 'append')
+
+class Transformer():
+    def __init__ (self, db):
+        self.db = db
 
 if __name__ == "__main__":
+    start = datetime.now()
+
     source_file = sys.argv[1]
     dest_file = sys.argv[2]
     source_db = Db(source_file)
@@ -128,55 +144,23 @@ if __name__ == "__main__":
     except:
         pass
 
-    # for table_name in source_db.tables:
-    table_name = "Employee"
-    extractor = Extractor(table_name, source_db, dest_db)
-    extractor.extract()
+    time_stats = []
+    extractor = Extractor(source_db, dest_db)
+    for table_name in source_db.tables:
+        start_time = datetime.now()
+        extractor.extract(table_name)
+        end_time = datetime.now()
 
-    # table = Table(table_name, source_db.metadata, autoload=True, autoload_with=source_db.engine)
-    # src_df = pd.read_sql_table(table.name, source_db.url)
-    # s_table = ETL_Table("S", table, dest_db, True)
-    # m_table = ETL_Table("M", table, dest_db, False)
-    # try:
-        # src_df.to_sql(s_table.name, dest_db.url, if_exists='append', index=False)
-    # except Exception as e:
-        # logger.error(e)
-    # finally:
-        # s_df = pd.read_sql_table(s_table.name, dest_db.url)
-    # s_df = pd.read_sql_table(s_table.name, dest_db.url)
-    # m_df = pd.read_sql_table(m_table.name, dest_db.url)
+        delta_time = str((end_time-start_time).total_seconds())
+        time_stats.append({table_name:delta_time})
+        logger.info(f"Runtime for table {table_name} : {delta_time} s")
 
-    # # get x_table
-    # x_table = ETL_Table("X", table, dest_db, True)
-    # x_df = pd.concat([s_df,m_df]).drop_duplicates(keep=False)
-    # x_df.to_sql(x_table.name, dest_db.url, if_exists='append', index=False)
-    # # clean x_table
-    # # c_table remove duplicates
-    # pk = str(s_table.table.primary_key.columns.values()[0].name)
-    # subset = list(s_df.columns)
-    # subset.remove(pk)
-    # c_df = x_df.drop_duplicates(subset=subset, keep=False)
-    # # c_table replace missing values
-    # for col in c_df.columns:
-        # null_value = "Unknown Value" if (c_df[col].dtypes == 'object') else -1
-        # empty_value = "Missing Value" if (c_df[col].dtypes == 'object') else -2
-        # c_df[col].fillna(null_value, inplace=True)
-        # c_df[col].replace("", empty_value, inplace=True)
-    # c_table = ETL_Table("C", table, dest_db, True)
-    # c_df.to_sql(c_table.name, dest_db.url, if_exists='append', index=False)
-    # # e_table get plicates
-    # duplicates = x_df.duplicated(subset=subset, keep=False)
-    # e_df = x_df[duplicates]
-    # e_table = ETL_Table("E", table, dest_db, True)
-    # e_df.to_sql(e_table.name, dest_db.url, if_exists='append', index=False)
-    # # m_table
-    # c_df.to_sql(m_table.name, dest_db.url, if_exists='append', index=False)
-    # # e_table
-    # # c_table
-    # # table = Table(t, source_db)
-    # # extractor = Extractor(table, dest_db)
-    # # s_table = extractor.load_s_table()
-    # # m_table = ETL_Table(table, "M", dest_db, False)
-    # # x_table = extractor.get_difference(s_table, m_table)
-    # # e_table, c_table = extractor.clean_rows(x_table)
-    # # m_table.insert_values(c_table.rows)
+    transformer = Transformer(dest_db)
+
+    end = datetime.now()
+    delta_time = str((end-start).total_seconds())
+    logger.info(f"Runtime: {delta_time} s")
+    print(f"Runtime for file: {delta_time} s")
+    print("Stats:")
+    for stat in time_stats:
+        print(stat)
