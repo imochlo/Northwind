@@ -179,7 +179,8 @@ class Transformer():
             foreign_keys = self.get_remaining_foreign_keys(df)
             print(counter)
             counter+=1
-        df.insert(0, "key", range(1, len(df)+1))
+        df.insert(0, "Key", range(1, len(df)+1))
+        logger.critical(df)
         # while table_column has id
         # get table columns
         # for each table column minus pk
