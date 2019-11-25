@@ -144,31 +144,35 @@ class Transformer():
         self.db = db
 
     def get_remaining_foreign_keys(self, df):
+        print("remaining foreign keys")
+        print(df.columns)
         foreign_keys = list(filter(lambda column: re.search(".Id$", column) 
-                                   and not re.search(".Key$", column), list(df.columns)))
+                                   and not re.sub("(.*)Id$", r"\1Key", column) in df.columns,
+                                   list(df.columns)))
         result = list(map(lambda key: {"name":re.sub("(.*)Id$", r"C_\1", key),
                                        "key":re.sub("(.*)Id$", r"\1Key", key),
                                        "id":key,
                                        }, foreign_keys))
         logger.debug(f"{df.name} Remaining Foreign Keys: {result}")
+        print(result)
         return result
 
     def join_tables(self, df, f_df, key):
         f_df.insert(0, key["key"], range(1, len(f_df)+1))
         logger.debug(f"Inserted {key} for {f_df.name}"
                      f"{f_df}")
-        result = pd.merge(df, f_df, left_on=key["id"], right_on="Id", how='left')
-        logger.debug(f"Join Tables {df.name} and {f_df.name} on {key.get(id)}"
-                     f"{result}")
-        result.name = df.name
-        return result
+        df = df.merge(f_df.set_index("Id"), left_on=key["id"], right_index=True, how="left")
+        df.name = key["name"]
+        logger.debug(f"Join Tables {df.name} and {f_df.name} on {key.get(id)}\n"
+                     f"{df}")
+        return df
 
     def transform(self, table):
         print(table)
         df = self.db.get_table_df(table)
         foreign_keys = self.get_remaining_foreign_keys(df)
         counter = 0
-        while foreign_keys and counter < 10:
+        while foreign_keys and counter < 5:
             key = foreign_keys.pop(0)
             f_df = self.db.get_table_df(key["name"])
             df = self.join_tables(df, f_df, key)
