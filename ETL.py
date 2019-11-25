@@ -129,6 +129,23 @@ class Transformer():
     def __init__ (self, db):
         self.db = db
 
+    def has_foreign_key(self, table):
+        df = pd.read_sql_table(table, self.db.url)
+        columns = list(df.columns)
+        print("\n"+table)
+        print(columns)
+        columns.remove("Id") # remove primary key
+        result = list(filter(lambda column: re.search("Id$", column), columns))
+        return len(result) > 0
+
+    def transform(self, table):
+        while self.has_foreign_key(table):
+            table = "C_Employee"
+        # while table_column has id
+        # get table columns
+        # for each table column minus pk
+        # if column in (db.tables)+id, then get c_+column-id
+
 if __name__ == "__main__":
     start = datetime.now()
 
@@ -137,25 +154,34 @@ if __name__ == "__main__":
     source_db = Db(source_file)
     dest_db = Db(dest_file)
 
-    try:
-        path = os.getcwd()+"/"+dest_file
-        logger.warning("Removing {}".format(path))
-        os.remove(path)
-    except:
-        pass
+    # try:
+        # path = os.getcwd()+"/"+dest_file
+        # logger.warning("Removing {}".format(path))
+        # os.remove(path)
+    # except:
+        # pass
 
     time_stats = []
-    extractor = Extractor(source_db, dest_db)
-    for table_name in source_db.tables:
+    # extractor = Extractor(source_db, dest_db)
+    # for table_name in source_db.tables:
+        # start_time = datetime.now()
+        # extractor.extract(table_name)
+        # end_time = datetime.now()
+
+        # delta_time = str((end_time-start_time).total_seconds())
+        # time_stats.append({table_name:delta_time})
+        # logger.info(f"Runtime for table {table_name} : {delta_time} s")
+
+    transformer = Transformer(dest_db)
+    clean_tables = filter(lambda table: "C_" in table, dest_db.tables)
+    for table_name in clean_tables:
         start_time = datetime.now()
-        extractor.extract(table_name)
+        transformer.transform(table_name)
         end_time = datetime.now()
 
         delta_time = str((end_time-start_time).total_seconds())
         time_stats.append({table_name:delta_time})
         logger.info(f"Runtime for table {table_name} : {delta_time} s")
-
-    transformer = Transformer(dest_db)
 
     end = datetime.now()
     delta_time = str((end-start).total_seconds())
