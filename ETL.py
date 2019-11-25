@@ -42,10 +42,24 @@ class Db:
             result = str(table.primary_key.columns.values()[0].name)
             logger.info(f"Table {table_name} has primary key {result}")
         except Exception as e:
+            result = "Id"
             logger.error(e)
-            logger.error("Primary key not found")
+            logger.error(f"Primary key not found, default set {result}")
         finally:
             return result
+
+    def get_table_df(self, table):
+        df = pd.DataFrame()
+        try:
+            df = pd.read_sql_table(table, self.url)
+        except Exception as e:
+            logger.error(e)
+            logger.error(f"{table} from {self.url} does not exist")
+        finally:
+            df.name = table
+            logger.debug(f"Extracted df from {df.name}\n"
+                         f"{df}")
+            return df
 
     @property
     def tables(self):
@@ -129,18 +143,39 @@ class Transformer():
     def __init__ (self, db):
         self.db = db
 
-    def has_foreign_key(self, table):
-        df = pd.read_sql_table(table, self.db.url)
-        columns = list(df.columns)
-        print("\n"+table)
-        print(columns)
-        columns.remove("Id") # remove primary key
-        result = list(filter(lambda column: re.search("Id$", column), columns))
-        return len(result) > 0
+    def get_remaining_foreign_keys(self, df):
+        foreign_keys = list(filter(lambda column: re.search(".Id$", column) 
+                                   and not re.search(".Key$", column), list(df.columns)))
+        result = list(map(lambda key: {"name":re.sub("(.*)Id$", r"C_\1", key),
+                                       "key":re.sub("(.*)Id$", r"\1Key", key),
+                                       "id":key,
+                                       }, foreign_keys))
+        logger.debug(f"{df.name} Remaining Foreign Keys: {result}")
+        return result
+
+    def join_tables(self, df, f_df, key):
+        f_df.insert(0, key["key"], range(1, len(f_df)+1))
+        logger.debug(f"Inserted {key} for {f_df.name}"
+                     f"{f_df}")
+        result = pd.merge(df, f_df, left_on=key["id"], right_on="Id", how='left')
+        logger.debug(f"Join Tables {df.name} and {f_df.name} on {key.get(id)}"
+                     f"{result}")
+        result.name = df.name
+        return result
 
     def transform(self, table):
-        while self.has_foreign_key(table):
-            table = "C_Employee"
+        print(table)
+        df = self.db.get_table_df(table)
+        foreign_keys = self.get_remaining_foreign_keys(df)
+        counter = 0
+        while foreign_keys and counter < 10:
+            key = foreign_keys.pop(0)
+            f_df = self.db.get_table_df(key["name"])
+            df = self.join_tables(df, f_df, key)
+            foreign_keys = self.get_remaining_foreign_keys(df)
+            print(counter)
+            counter+=1
+        df.insert(0, "key", range(1, len(df)+1))
         # while table_column has id
         # get table columns
         # for each table column minus pk
@@ -172,16 +207,17 @@ if __name__ == "__main__":
         # time_stats.append({table_name:delta_time})
         # logger.info(f"Runtime for table {table_name} : {delta_time} s")
 
+    clean_tables = ["C_Employee", "C_Order"]
     transformer = Transformer(dest_db)
-    clean_tables = filter(lambda table: "C_" in table, dest_db.tables)
+    # clean_tables = filter(lambda table: "C_" in table, dest_db.tables)
     for table_name in clean_tables:
         start_time = datetime.now()
         transformer.transform(table_name)
         end_time = datetime.now()
 
-        delta_time = str((end_time-start_time).total_seconds())
-        time_stats.append({table_name:delta_time})
-        logger.info(f"Runtime for table {table_name} : {delta_time} s")
+    delta_time = str((end_time-start_time).total_seconds())
+    time_stats.append({table_name:delta_time})
+    logger.info(f"Runtime for table {table_name} : {delta_time} s")
 
     end = datetime.now()
     delta_time = str((end-start).total_seconds())
