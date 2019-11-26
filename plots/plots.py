@@ -1,33 +1,24 @@
-from dateutil import parser
-import datetime as dt
 import numpy as np
 import pandas as pd
+
 import plotly.graph_objs as go
 
-db = "sqlite:///DW/DW.sqlite"
-
-# if __name__ == "__main__":
-    # df = pd.read_sql_table("D_Order", db)
-    # date = df["OrderDate"].head()[0]
-    # print(date)
-    # print(parser.parse(date))
-
 def plot_pie():
-
+    
     labels = ['Oxygen','Hydrogen','Carbon_Dioxide','Nitrogen']
     values = [4500,2500,1053,500]
     colors = ['#FEBFB3', '#E1396C', '#96D38C', '#D0F9B1']
-
+    
     trace = go.Pie(labels=labels, values=values,
-                   hoverinfo='label+percent', textinfo='value',
+                   hoverinfo='label+percent', textinfo='value', 
                    textfont=dict(size=20),
-                   marker=dict(colors=colors,
+                   marker=dict(colors=colors, 
                                line=dict(color='#000000', width=2)))
-
-    return dict(data=[trace])
-
+                                         
+    return dict(data=[trace]) 
+   
 def plot_scatter(N=50):
-
+    
     trace1 = go.Scatter(
         y = np.random.randn(N),
         mode='markers',
@@ -38,24 +29,16 @@ def plot_scatter(N=50):
             showscale=True
         )
     )
-
+        
     return dict(data=[trace1])
 
 def plot_surface():
     z_data = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/api_docs/mt_bruno_elevation.csv')
-
+    
     data = [
         go.Surface(
             z=z_data.values,
-            contours=go.surface.Contours(
-                z=go.surface.contours.Z(
-                  show=True,
-                  usecolormap=True,
-                  highlightcolor="#42f462",
-                  project=dict(z=True)
-                )
             )
-        )
     ]
     layout = go.Layout(
         title='Mt Bruno Elevation',
