@@ -153,6 +153,7 @@ class Extractor:
 
         self.store_df(c_df, prefix_table("M"), 'append')
 
+
 class Transformer():
     def __init__ (self, db):
         self.db = db
@@ -265,7 +266,38 @@ class Transformer():
         i_df = self.get_diff(prefix_table("T"), prefix_table("D"))
         self.store_df(i_df, prefix_table("I"), if_exists = 'replace', index_label=None)
         self.store_df(i_df, prefix_table("D"), if_exists = 'replace', index_label=None)
-        i_df.to_sql(prefix_table("D"), "sqlite:///DW.sqlite", if_exists = 'replace', index=False)
+
+class Loader:
+    def __init__ (self, src_db, dest_db):
+        self.src_db = src_db
+        self.dest_db = dest_db
+        logger.info(f"Loader created with source db: {src_db.url} and dest_db: {dest_db.url}")
+        if "D_Date" not in dest_db.tables:
+            self.create_d_date()
+
+    def create_d_date(self):
+        start_date = '1900-01-01'
+        end_date = '2100-12-31'
+        df = pd.DataFrame({"Date": pd.date_range(start_date, end_date)})
+        df["DayName"] = df.Date.dt.weekday_name
+        df["Month"] = df.Date.dt.month
+        df["Day"] = df.Date.dt.day
+        df["Year"] = df.Date.dt.year
+        df["Week"] = df.Date.dt.weekofyear
+        df["Quarter"] = df.Date.dt.quarter
+        df["Year_half"] = (df.Quarter+1) // 2
+        df.insert(0, "Key", range(len(df)))
+        try:
+            df.to_sql("D_Date", self.dest_db.url, if_exists = 'fail', index=False)
+            logger.info(f"D_Date created\n"
+                        f"{df}")
+        except Exception as e:
+            logger.error(e)
+
+    def load(self, table_name):
+        prefix_table = lambda prefix: "_".join([prefix, table_name])
+        df = self.src_db.get_table_df(prefix_table("D"))
+        df.to_sql(prefix_table("D"), self.dest_db.url, if_exists = 'replace', index=False)
 
 if __name__ == "__main__":
     start = datetime.now()
@@ -273,12 +305,21 @@ if __name__ == "__main__":
     # source_file = sys.argv[1]
     # dest_file = sys.argv[2]
     source_file = "Northwind.sqlite"
-    dest_file = "ETL.sqlite"
+    etl_file = "ETL.sqlite"
+    dw_file = "DW.sqlite"
     source_db = Db(source_file)
-    dest_db = Db(dest_file)
+    etl_db = Db(etl_file)
+    dw_db = Db(dw_file)
 
     try:
-        path = os.getcwd()+"/"+dest_file
+        path = os.getcwd()+"/"+etl_file
+        logger.warning("Removing {}".format(path))
+        os.remove(path)
+    except:
+        pass
+
+    try:
+        path = os.getcwd()+"/"+dw_file
         logger.warning("Removing {}".format(path))
         os.remove(path)
     except:
@@ -286,7 +327,7 @@ if __name__ == "__main__":
 
     time_stats = []
 
-    extractor = Extractor(source_db, dest_db)
+    extractor = Extractor(source_db, etl_db)
     # table_names = ["Employee"]
     # for table_name in table_names:
     for table_name in source_db.tables:
@@ -298,12 +339,24 @@ if __name__ == "__main__":
         time_stats.append({table_name:delta_time})
         logger.info(f"Extractor Runtime for table {table_name} : {delta_time} s")
 
-    transformer = Transformer(dest_db)
-    # clean_tables = list(filter(lambda table: "C_"+table in dest_db.tables, source_db.tables))
-    clean_tables = ["Employee", "Order"]
+    transformer = Transformer(etl_db)
+    clean_tables = list(filter(lambda table: "C_"+table in etl_db.tables, source_db.tables))
+    # clean_tables = ["Employee", "Order"]
     for table_name in clean_tables:
         start_time = datetime.now()
         transformer.transform(table_name)
+        end_time = datetime.now()
+
+        delta_time = str((end_time-start_time).total_seconds())
+        time_stats.append({table_name:delta_time})
+        logger.info(f"Transformer Runtime for table {table_name} : {delta_time} s")
+
+    loader = Loader(etl_db, dw_db)
+    dim_tables = list(filter(lambda table: "D_"+table in etl_db.tables, source_db.tables))
+    # clean_tables = ["Employee", "Order"]
+    for table_name in dim_tables:
+        start_time = datetime.now()
+        loader.load(table_name)
         end_time = datetime.now()
 
         delta_time = str((end_time-start_time).total_seconds())
