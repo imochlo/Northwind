@@ -9,7 +9,8 @@ import sys
 from datetime import datetime
 
 LOG_FORMAT = "%(asctime)s ETL_Log[%(lineno)d] %(levelname)s: %(message)s"
-logging.basicConfig(filename = os.getcwd()+"/Log_ETL.log",
+log_time = datetime.now().strftime("%d%b%y_%Hh%Mm%Ss")
+logging.basicConfig(filename = os.getcwd()+"/Log_ETL"+log_time+".log",
                     level = logging.DEBUG,
                     format = LOG_FORMAT,
                     filemode = 'w')
@@ -264,8 +265,8 @@ class Transformer():
         t_df = self.store_df(df, prefix_table("T"), if_exists = 'replace', index_label=suffix_table("Key"))
         d_df = self.db.get_table_df(prefix_table("D"))
         i_df = self.get_diff(prefix_table("T"), prefix_table("D"))
-        self.store_df(i_df, prefix_table("I"), if_exists = 'replace', index_label=None)
-        self.store_df(i_df, prefix_table("D"), if_exists = 'replace', index_label=None)
+        self.store_df(i_df, prefix_table("I"), if_exists = 'replace')
+        self.store_df(i_df, prefix_table("D"), if_exists = 'replace')
 
 class Loader:
     def __init__ (self, src_db, dest_db):
@@ -279,16 +280,20 @@ class Loader:
         start_date = '1900-01-01'
         end_date = '2100-12-31'
         df = pd.DataFrame({"Date": pd.date_range(start_date, end_date)})
-        df["DayName"] = df.Date.dt.weekday_name
-        df["Month"] = df.Date.dt.month
+        df["DayNameNum"] = df["Date"].apply(lambda date: str(date.strftime("%w"))).astype(str)
+        df["DayNameFull"] = df["Date"].apply(lambda date: str(date.strftime("%A"))).astype(str)
+        df["DayNameAbbrev"] = df["Date"].apply(lambda date: str(date.strftime("%a"))).astype(str)
+        df["MonthNum"] = df.Date.dt.month
+        df["MonthFull"] = df["Date"].apply(lambda date: str(date.strftime("%B"))).astype(str)
+        df["MonthAbbrev"] = df["Date"].apply(lambda date: str(date.strftime("%b"))).astype(str)
         df["Day"] = df.Date.dt.day
         df["Year"] = df.Date.dt.year
         df["Week"] = df.Date.dt.weekofyear
         df["Quarter"] = df.Date.dt.quarter
         df["Year_half"] = (df.Quarter+1) // 2
-        df.insert(0, "Key", range(len(df)))
+        df["Date"] = df["Date"].apply(lambda date: str(date.strftime("%Y-%m-%d"))).astype(str)
         try:
-            df.to_sql("D_Date", self.dest_db.url, if_exists = 'fail', index=False)
+            df.to_sql("D_Date", self.dest_db.url, if_exists = 'fail', index=True, index_label="DateKey")
             logger.info(f"D_Date created\n"
                         f"{df}")
         except Exception as e:
