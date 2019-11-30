@@ -10,7 +10,7 @@ value_boxes_tab = dac.TabItem(id='content_value_boxes',
             	value=150,
                 subtitle="New orders",
                 color = "primary",
-                icon = "shopping-cart",
+                icon = "people-carry",
                 href = "#"
             ),
             dac.ValueBox(

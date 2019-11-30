@@ -21,7 +21,7 @@ cards_tab = dac.TabItem(id='content_cards',
                 dac.Box(
                     [
                         dac.BoxHeader(
-        					dac.BoxDropdown(dropdown_items),
+                            dac.BoxDropdown(dropdown_items),
                             collapsible = True,
                             closable = True,
                             title="Closable box with dropdown"

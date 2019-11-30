@@ -42,7 +42,7 @@ tab_cards_tab = dac.TabItem(id='content_tab_cards',
                 dac.TabBox(
                     [
                         dac.TabBoxHeader(
-        					dac.TabBoxMenu(
+                                dac.TabBoxMenu(
                                 [
                                     dac.TabBoxMenuItem(tab_id='tab_box_1_tab1',
                                                        label='Tab 1'),
@@ -68,7 +68,7 @@ tab_cards_tab = dac.TabItem(id='content_tab_cards',
                 dac.TabBox(
                     [
                         dac.TabBoxHeader(
-        					dac.TabBoxMenu(
+                                dac.TabBoxMenu(
                                 [
                                     dac.TabBoxMenuItem(tab_id='tab_box_2_tab1',
                                                        label='Tab 1', 
