@@ -357,9 +357,9 @@ class Loader:
         logger.info(f"Loader created with source db: {src_db.url} and dest_db: {dest_db.url}")
 
     def load(self, table_name):
-        prefix_table = lambda prefix: "_".join([prefix, table_name])
-        df = self.src_db.get_table_df(prefix_table("D"))
-        df.to_sql(prefix_table("D"), self.dest_db.url, if_exists = 'replace', index=False)
+        # prefix_table = lambda prefix: "_".join([prefix, table_name])
+        df = self.src_db.get_table_df(table_name)
+        df.to_sql(table_name, self.dest_db.url, if_exists = 'replace', index=False)
 
 if __name__ == "__main__":
     start = datetime.now()
@@ -458,7 +458,8 @@ if __name__ == "__main__":
         "TotalAmt":"sum",
         "DiscountAmt":"sum"
     })
-    f_order_line_item.to_sql("F_OrderLineItem", dw_db.url, if_exists = 'replace', index=True, index_label="F_OrderLineItemKey")
+    f_order_line_item.insert(0, "F_OrderLineItemKey", range(len(f_order_line_item)))
+    f_order_line_item.to_sql("F_OrderLineItem", dw_db.url, if_exists = 'replace', index=False)
 
     f_order_transaction = df[[
         "OrderKey",
@@ -484,7 +485,8 @@ if __name__ == "__main__":
         "TotalAmt":"sum",
         "DiscountAmt":"sum"
     })
-    f_order_transaction.to_sql("F_OrderTransaction", dw_db.url, if_exists = 'replace', index=True, index_label="F_OrderTransaction")
+    f_order_transaction.insert(0, "F_OrderTransactionKey", range(len(f_order_transaction)))
+    f_order_transaction.to_sql("F_OrderTransaction", dw_db.url, if_exists = 'replace', index=False)
 
     f_shipment_transaction = df[[
         "OrderKey",
@@ -516,7 +518,8 @@ if __name__ == "__main__":
         "DiscountAmt":"sum",
         "Freight":"sum"
     })
-    f_shipment_transaction.to_sql("F_ShipmentTransaction", dw_db.url, if_exists = 'replace', index=True, index_label="F_ShipmentTransaction")
+    f_shipment_transaction.insert(0, "F_ShipmentTransactionKey", range(len(f_shipment_transaction)))
+    f_shipment_transaction.to_sql("F_ShipmentTransaction", dw_db.url, if_exists = 'replace', index=False)
 
     end = datetime.now()
     delta_time = str((end-start).total_seconds())
