@@ -37,8 +37,27 @@ df["DiscountAmt"] = df["Discount"] * df["Quantity"] * df["OrderDetailUnitPrice"]
 # Order Line Item Fact
 # print(df[["OrderKey", "OrderDateKey", "RequiredDateKey", "CustomerKey", "EmployeeKey", "OrderDetailUnitPrice", "Quantity", "ExtendedAmt", "Discount", "DiscountAmt", "TotalAmt"]].tail())
 # Order Transaction
-f_order_transaction = df.groupby("OrderId")[["ExtendedAmt", "DiscountAmt", "TotalAmt",]].sum()
-print(f_order_transaction.reset_index().tail())
+# f_order_transaction = df.groupby("OrderId")#[["ExtendedAmt", "DiscountAmt", "TotalAmt",]].sum()
+# print(f_order_transaction["ProductKey"].count().tail())
+# print(len(f_order_transaction))
 # print(f_order_transaction[["OrderKey", "OrderDateKey", "RequiredDateKey", "CustomerKey", "EmployeeKey", "OrderDetailUnitPrice", "Quantity", "ExtendedAmt", "Discount", "DiscountAmt", "TotalAmt"]].tail())
 # Order Transaction
-# print(len(order_detail))
+# print(df.columns)
+# Shipment Transaction
+f_shipment_transaction = df.groupby(
+    ["OrderId",
+     "OrderDate",
+     "RequiredDate",
+     "ShippedDate",
+     "CustomerKey",
+     "EmployeeKey",
+     "ShipperKey"
+     ]).agg(
+         {"Quantity":"count",
+          "ExtendedAmt":"sum",
+          "TotalAmt":"sum",
+          "DiscountAmt":"sum"
+          }).reset_index()
+
+# f_shipment_transaction = f_shipment_transaction["ProductKey"].count()
+print(f_shipment_transaction.tail())

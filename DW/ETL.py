@@ -49,6 +49,14 @@ class Db:
         finally:
             return result
 
+    def create_subd_date(self, table_name):
+        prefix = re.sub(r"D_(.*)Date", r"\1", table_name)
+        df = self.get_table_df("D_Date")
+        df = df.add_prefix(prefix)
+        df.to_sql(table_name, self.url, if_exists = 'replace', index=False)
+        logger.info(f"Create Sub Date {table_name}\n{df.head()}")
+        return df
+
     def get_table_df(self, table_name):
         df = pd.DataFrame()
         try:
@@ -56,6 +64,9 @@ class Db:
         except Exception as e:
             logger.error(e)
             logger.error(f"{table_name} from {self.url} does not exist")
+            if re.match(r"D_.*Date", table_name):
+                df = self.create_subd_date(table_name)
+
         finally:
             df.name = table_name
             if table_name.find("_"):
@@ -159,25 +170,92 @@ class Transformer():
     def __init__ (self, db):
         self.db = db
         logger.info(f"Transformer created for {self.db.url}")
+        if "D_Date" not in db.tables:
+            self.create_d_date()
+
+    def create_d_date(self):
+        start_date = '1900-01-01'
+        end_date = '2100-12-31'
+        df = pd.DataFrame({"Date": pd.date_range(start_date, end_date)})
+        df.insert(0, "DateId", range(len(df)))
+        df["DayNameNum"] = df["Date"].apply(lambda date: str(date.strftime("%w"))).astype(str)
+        df["DayNameFull"] = df["Date"].apply(lambda date: str(date.strftime("%A"))).astype(str)
+        df["DayNameAbbrev"] = df["Date"].apply(lambda date: str(date.strftime("%a"))).astype(str)
+        df["MonthNum"] = df.Date.dt.month
+        df["MonthFull"] = df["Date"].apply(lambda date: str(date.strftime("%B"))).astype(str)
+        df["MonthAbbrev"] = df["Date"].apply(lambda date: str(date.strftime("%b"))).astype(str)
+        df["Day"] = df.Date.dt.day
+        df["Year"] = df.Date.dt.year
+        df["Week"] = df.Date.dt.weekofyear
+        df["Quarter"] = df.Date.dt.quarter
+        df["Half"] = (df.Quarter+1) // 2
+        df["Date"] = df["Date"].apply(lambda date: str(date.strftime("%Y-%m-%d"))).astype(str)
+        try:
+            df.to_sql("D_Date", self.db.url, if_exists = 'fail', index=True, index_label="DateKey")
+            logger.info(f"D_Date created\n"
+                        f"{df}")
+        except Exception as e:
+            logger.error(e)
+
+    def get_date_keys(self, df):
+        result = []
+        date_columns = list(filter(lambda col: re.search(r".*Date$", col)
+                                   and not col+"Key" in list(df.columns),
+                                   list(df.columns)))
+        for date_col in date_columns:
+            root = re.sub(r"^(.*)Date", r"\1", date_col)
+            result.append({"name":"D_"+date_col, 
+                           "key": date_col+"Key", 
+                           "left_id":date_col,
+                           "right_id":date_col,
+                           })
+        return result
+
+    def get_custom_key(self, df):
+        result = []
+        columns = list(df.columns)
+        if ("ShipVia" in columns and "ShipperKey" not in columns):
+            result.append({"name":"C_Shipper",
+                                 "key": "ShipperKey",
+                                 "left_id": "ShipVia",
+                                 "right_id": "Id"
+                                 })
+        if ("CustomerTypeId" in columns and "CustomerDemographicKey" not in columns):
+            result.append({"name":"C_CustomerDemographic",
+                                 "key":"CustomerDemographicKey",
+                                 "left_id": "CustomerTypeId",
+                                 "right_id": "Id"
+                                 })
+            # foreign_keys = [new_map if x["id"] == "CustomerTypeId" else x for x in foreign_keys]
+        return result
+
 
     def get_remaining_foreign_keys(self, df):
+        res = []
         foreign_keys = list(filter(lambda column: re.search(".Id$", column) 
                                    and not re.sub("(.*)Id$", r"\1Key", column) in df.columns
                                    and re.sub("(.*)Id$", r"C_\1", column) in self.db.tables,
                                    list(df.columns)))
         result = list(map(lambda key: {"name":re.sub("(.*)Id$", r"C_\1", key),
                                        "key":re.sub("(.*)Id$", r"\1Key", key),
-                                       "id":key,
+                                       "left_id":key,
+                                       "right_id":"Id",
                                        }, foreign_keys))
+        result.extend(self.get_date_keys(df))
+        result.extend(self.get_custom_key(df))
         logger.debug(f"{self.table_name} Remaining Foreign Keys: {result}")
         return result
 
     def join_tables(self, df, f_df, t_key):
-        t_id = t_key["id"]
-        f_df.insert(0, t_key["key"], range(len(f_df)))
-        logger.debug(f"Inserted {t_key} for {f_df.name}"
-                     f"{f_df}")
-        conflict_columns = list(filter(lambda col: col in list(f_df.columns) and col != "Id", list(df.columns)))
+        l_id = t_key["left_id"]
+        r_id = t_key["right_id"]
+        key = t_key["key"]
+        f_name = f_df.name
+        if t_key["key"] not in f_df.columns:
+            f_df.insert(0, t_key["key"], range(len(f_df)))
+            logger.debug(f"Inserted {key} for {f_name}"
+                         f"{f_df}")
+        conflict_columns = list(filter(lambda col: col in list(f_df.columns) and col != r_id, list(df.columns)))
         if len(conflict_columns) > 0:
             logger.warning(f"Conflict columns {conflict_columns}")
             df_column = {}
@@ -188,8 +266,11 @@ class Transformer():
                 df_column[col] = f_df.root_name + col
             f_df.rename(columns=df_column, inplace=True)
 
-        df = df.merge(f_df.set_index("Id"), left_on=t_key["id"], right_index=True, how="left")
-        logger.debug(f"Join Tables {self.table_name} and {f_df.name} on {t_id}\n"
+        if l_id == r_id:
+            df = df.merge(f_df, on=l_id, how="left")
+        else:
+            df = df.merge(f_df.set_index(r_id), left_on=l_id, right_index=True, how="left")
+        logger.debug(f"Join Tables {self.table_name} and {f_name} on {l_id} = {r_id}\n"
                      f"{df}")
         types = self.db.get_dtypes(t_key["name"])
         return df
@@ -267,37 +348,13 @@ class Transformer():
         i_df = self.get_diff(prefix_table("T"), prefix_table("D"))
         self.store_df(i_df, prefix_table("I"), if_exists = 'replace')
         self.store_df(i_df, prefix_table("D"), if_exists = 'replace')
+        # Note: update is not applicable and so D is just replaced
 
 class Loader:
     def __init__ (self, src_db, dest_db):
         self.src_db = src_db
         self.dest_db = dest_db
         logger.info(f"Loader created with source db: {src_db.url} and dest_db: {dest_db.url}")
-        if "D_Date" not in dest_db.tables:
-            self.create_d_date()
-
-    def create_d_date(self):
-        start_date = '1900-01-01'
-        end_date = '2100-12-31'
-        df = pd.DataFrame({"Date": pd.date_range(start_date, end_date)})
-        df["DayNameNum"] = df["Date"].apply(lambda date: str(date.strftime("%w"))).astype(str)
-        df["DayNameFull"] = df["Date"].apply(lambda date: str(date.strftime("%A"))).astype(str)
-        df["DayNameAbbrev"] = df["Date"].apply(lambda date: str(date.strftime("%a"))).astype(str)
-        df["MonthNum"] = df.Date.dt.month
-        df["MonthFull"] = df["Date"].apply(lambda date: str(date.strftime("%B"))).astype(str)
-        df["MonthAbbrev"] = df["Date"].apply(lambda date: str(date.strftime("%b"))).astype(str)
-        df["Day"] = df.Date.dt.day
-        df["Year"] = df.Date.dt.year
-        df["Week"] = df.Date.dt.weekofyear
-        df["Quarter"] = df.Date.dt.quarter
-        df["Year_half"] = (df.Quarter+1) // 2
-        df["Date"] = df["Date"].apply(lambda date: str(date.strftime("%Y-%m-%d"))).astype(str)
-        try:
-            df.to_sql("D_Date", self.dest_db.url, if_exists = 'fail', index=True, index_label="DateKey")
-            logger.info(f"D_Date created\n"
-                        f"{df}")
-        except Exception as e:
-            logger.error(e)
 
     def load(self, table_name):
         prefix_table = lambda prefix: "_".join([prefix, table_name])
