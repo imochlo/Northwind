@@ -414,7 +414,7 @@ if __name__ == "__main__":
         logger.info(f"Transformer Runtime for table {table_name} : {delta_time} s")
 
     loader = Loader(etl_db, dw_db)
-    dim_tables = list(filter(lambda table: "D_"+table in etl_db.tables, source_db.tables))
+    dim_tables = list(filter(lambda table: re.match(r"^D_", table), etl_db.tables))
     # clean_tables = ["Employee", "Order"]
     for table_name in dim_tables:
         start_time = datetime.now()
@@ -424,6 +424,99 @@ if __name__ == "__main__":
         delta_time = str((end_time-start_time).total_seconds())
         time_stats.append({table_name:delta_time})
         logger.info(f"Transformer Runtime for table {table_name} : {delta_time} s")
+
+    # Fact Tables
+    df = pd.read_sql_table("D_OrderDetail", "sqlite:///DW.sqlite")
+    df["ExtendedAmt"] = df["Quantity"] * df["OrderDetailUnitPrice"]
+    df["TotalAmt"] = (1-df["Discount"]) * df["Quantity"] * df["OrderDetailUnitPrice"]
+    df["DiscountAmt"] = df["Discount"] * df["Quantity"] * df["OrderDetailUnitPrice"]
+
+    f_order_line_item = df[[
+        "OrderKey",
+        "OrderDateKey",
+        "RequiredDateKey",
+        "CustomerKey",
+        "ProductKey",
+        "EmployeeKey",
+        "OrderDetailUnitPrice",
+        "Quantity",
+        "Discount",
+        "ExtendedAmt",
+        "TotalAmt",
+        "DiscountAmt",
+    ]]
+
+    f_order_line_item = f_order_line_item.groupby([
+        "OrderKey",
+        "OrderDateKey",
+        "RequiredDateKey",
+        "CustomerKey",
+        "ProductKey",
+        "EmployeeKey",
+    ]).agg({
+        "ExtendedAmt":"sum",
+        "TotalAmt":"sum",
+        "DiscountAmt":"sum"
+    })
+    f_order_line_item.to_sql("F_OrderLineItem", dw_db.url, if_exists = 'replace', index=True, index_label="F_OrderLineItemKey")
+
+    f_order_transaction = df[[
+        "OrderKey",
+        "OrderDateKey",
+        "RequiredDateKey",
+        "CustomerKey",
+        "EmployeeKey",
+        "Quantity",
+        "ExtendedAmt",
+        "TotalAmt",
+        "DiscountAmt",
+    ]]
+
+    f_order_transaction = f_order_transaction.groupby([
+        "OrderKey",
+        "OrderDateKey",
+        "RequiredDateKey",
+        "CustomerKey",
+        "EmployeeKey",
+    ]).agg({
+        "Quantity":"sum",
+        "ExtendedAmt":"sum",
+        "TotalAmt":"sum",
+        "DiscountAmt":"sum"
+    })
+    f_order_transaction.to_sql("F_OrderTransaction", dw_db.url, if_exists = 'replace', index=True, index_label="F_OrderTransaction")
+
+    f_shipment_transaction = df[[
+        "OrderKey",
+        "OrderDateKey",
+        "RequiredDateKey",
+        "ShippedDateKey",
+        "CustomerKey",
+        "EmployeeKey",
+        "ShipperKey",
+        "Quantity",
+        "ExtendedAmt",
+        "TotalAmt",
+        "DiscountAmt",
+        "Freight",
+    ]]
+
+    f_shipment_transaction = f_shipment_transaction.groupby([
+        "OrderKey",
+        "OrderDateKey",
+        "RequiredDateKey",
+        "ShippedDateKey",
+        "CustomerKey",
+        "EmployeeKey",
+        "ShipperKey"
+    ]).agg({
+        "Quantity":"sum",
+        "ExtendedAmt":"sum",
+        "TotalAmt":"sum",
+        "DiscountAmt":"sum",
+        "Freight":"sum"
+    })
+    f_shipment_transaction.to_sql("F_ShipmentTransaction", dw_db.url, if_exists = 'replace', index=True, index_label="F_ShipmentTransaction")
 
     end = datetime.now()
     delta_time = str((end-start).total_seconds())
