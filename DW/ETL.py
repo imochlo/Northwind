@@ -453,12 +453,12 @@ if __name__ == "__main__":
         "CustomerKey",
         "ProductKey",
         "EmployeeKey",
-    ]).agg({
+    ], as_index=False).agg({
+        "Quantity":"sum",
         "ExtendedAmt":"sum",
         "TotalAmt":"sum",
         "DiscountAmt":"sum"
     })
-    f_order_line_item.insert(0, "F_OrderLineItemKey", range(len(f_order_line_item)))
     f_order_line_item.to_sql("F_OrderLineItem", dw_db.url, if_exists = 'replace', index=False)
 
     f_order_transaction = df[[
@@ -479,13 +479,12 @@ if __name__ == "__main__":
         "RequiredDateKey",
         "CustomerKey",
         "EmployeeKey",
-    ]).agg({
+    ], as_index=False).agg({
         "Quantity":"sum",
         "ExtendedAmt":"sum",
         "TotalAmt":"sum",
         "DiscountAmt":"sum"
     })
-    f_order_transaction.insert(0, "F_OrderTransactionKey", range(len(f_order_transaction)))
     f_order_transaction.to_sql("F_OrderTransaction", dw_db.url, if_exists = 'replace', index=False)
 
     f_shipment_transaction = df[[
@@ -511,15 +510,36 @@ if __name__ == "__main__":
         "CustomerKey",
         "EmployeeKey",
         "ShipperKey"
-    ]).agg({
+    ], as_index=False).agg({
         "Quantity":"sum",
         "ExtendedAmt":"sum",
         "TotalAmt":"sum",
         "DiscountAmt":"sum",
         "Freight":"sum"
     })
-    f_shipment_transaction.insert(0, "F_ShipmentTransactionKey", range(len(f_shipment_transaction)))
     f_shipment_transaction.to_sql("F_ShipmentTransaction", dw_db.url, if_exists = 'replace', index=False)
+
+    f_purchase_orders = df[[
+        "OrderKey",
+        "SupplierKey",
+        "ShipperKey",
+        "ProductKey",
+        "Quantity",
+        "ExtendedAmt",
+        "TotalAmt",
+        "DiscountAmt",
+    ]]
+    f_purchase_orders = f_purchase_orders.groupby([
+        "OrderKey",
+        "SupplierKey",
+        "ShipperKey",
+    ], as_index=False).agg({
+        "Quantity":"sum",
+        "ExtendedAmt":"sum",
+        "TotalAmt":"sum",
+        "DiscountAmt":"sum",
+    })
+    f_purchase_orders.to_sql("F_Purchase_Order", dw_db.url, if_exists = 'replace', index=False)
 
     end = datetime.now()
     delta_time = str((end-start).total_seconds())
