@@ -7,14 +7,12 @@ import dash_admin_components as dac
 
 from dash.exceptions import PreventUpdate
 
-from components.cards import cards_tab
-from components.social_cards import social_cards_tab
-from components.tab_cards import tab_cards_tab
-from components.basic_boxes import basic_boxes_tab
-from components.value_boxes import value_boxes_tab
+from tabs.tab_sales import sales_tab
+from tabs.tab_shipment import shipment_tab
+from tabs.tab_inventory import inventory_tab
 
 from plots.plots import plot_scatter
-from components.tab_cards import text_1, text_2, text_3
+from tabs.tab_inventory import text_1, text_2, text_3
 
 # =============================================================================
 # Dash App and Flask Server
@@ -44,42 +42,23 @@ right_ui = dac.NavbarDropdown(
 )
                               
 navbar = dac.Navbar(color = "white", 
-                    text="I can write text in the navbar!", 
                     children=right_ui)
 
 # Sidebar
-subitems = [dac.SidebarMenuSubItem(id='tab_gallery_1', 
-                            label='Gallery 1', 
-                            icon='arrow-circle-right', 
-                            badge_label='Soon',
-                            badge_color='success'), 
-			dac.SidebarMenuSubItem(id='tab_gallery_2', 
-                            label='Gallery 2', 
-                            icon='arrow-circle-right', 
-                            badge_label='Soon', 
-                            badge_color='success')
-            ]
-
 sidebar = dac.Sidebar(
 	dac.SidebarMenu(
 		[
-                    dac.SidebarHeader(children="Cards"),
-                    dac.SidebarMenuItem(id='tab_cards', label='Basic cards', icon='box'),
-                    dac.SidebarMenuItem(id='tab_social_cards', label='Social cards', icon='id-card'),
-                    dac.SidebarMenuItem(id='tab_tab_cards', label='Tab cards', icon='image'),
-                    dac.SidebarHeader(children="Boxes"),
-                    dac.SidebarMenuItem(id='tab_basic_boxes', label='Basic boxes', icon='desktop'),
-                    dac.SidebarMenuItem(id='tab_value_boxes', label='Value/Info boxes', icon='suitcase'),
-                    dac.SidebarHeader(children="Gallery"),
-                    dac.SidebarMenuItem(label='Galleries', icon='cubes', children=subitems),
+                    dac.SidebarMenuItem(id='tab_sales', label='Sales', icon='dollar-sign'),
+                    dac.SidebarMenuItem(id='tab_shipment', label='Shipment', icon='truck'),
+                    dac.SidebarMenuItem(id='tab_inventory', label='Inventory', icon='boxes'),
 		]
 	),
-    title='Dash Admin',
-	skin="light",
+    title='Nortwind Admin',
+    skin="light",
     color="primary",
-	brand_color="primary",
+    brand_color="primary",
     url="https://quantee.ai",
-    src="https://adminlte.io/themes/AdminLTE/dist/img/user2-160x160.jpg",
+    src="https://static.thenounproject.com/png/214846-200.png",
     elevation=3,
     opacity=0.8
 )
@@ -87,34 +66,28 @@ sidebar = dac.Sidebar(
 # Body
 body = dac.Body(
     dac.TabItems([
-        cards_tab,
-        social_cards_tab,
-        tab_cards_tab,
-        basic_boxes_tab,
-        value_boxes_tab,
-        dac.TabItem(html.P('Gallery 1 (You can add Dash Bootstrap Components!)'), 
-                    id='content_gallery_1'),
-        dac.TabItem(html.P('Gallery 2 (You can add Dash Bootstrap Components!)'), 
-                    id='content_gallery_2'),
+        sales_tab,
+        shipment_tab,
+        inventory_tab,
     ])
 )
 
 # Controlbar
-controlbar = dac.Controlbar(
-    [
-        html.Br(),
-        html.P("Slide to change graph in Basic Boxes"),
-        dcc.Slider(
-            id='controlbar-slider',
-            min=10,
-            max=50,
-            step=1,
-            value=20
-        )
-    ],
-    title = "My right sidebar",
-    skin = "light"
-)
+# controlbar = dac.Controlbar(
+    # [
+        # html.Br(),
+        # html.P("Slide to change graph in Basic Boxes"),
+        # dcc.Slider(
+            # id='controlbar-slider',
+            # min=10,
+            # max=50,
+            # step=1,
+            # value=20
+        # )
+    # ],
+    # title = "My right sidebar",
+    # skin = "light"
+# )
 
 # Footer
 footer = dac.Footer(
@@ -128,50 +101,31 @@ footer = dac.Footer(
 # =============================================================================
 # App Layout
 # =============================================================================
-app.layout = dac.Page([navbar, sidebar, body, controlbar, footer])
+app.layout = dac.Page([navbar, sidebar, body, footer])
 
 # =============================================================================
 # Callbacks
 # =============================================================================
-def activate(input_id, 
-             n_cards, n_social_cards, n_tab_cards, n_basic_boxes,
-             n_value_boxes, n_gallery_1, n_gallery_2):
+def activate(input_id, n_sales, n_shipment, n_inventory):
     
     # Depending on tab which triggered a callback, show/hide contents of app
-    if input_id == 'tab_cards' and n_cards:
-        return True, False, False, False, False, False, False
-    elif input_id == 'tab_social_cards' and n_social_cards:
-        return False, True, False, False, False, False, False
-    elif input_id == 'tab_tab_cards' and n_tab_cards:
-        return False, False, True, False, False, False, False
-    elif input_id == 'tab_basic_boxes' and n_basic_boxes:
-        return False, False, False, True, False, False, False
-    elif input_id == 'tab_value_boxes' and n_value_boxes:
-        return False, False, False, False, True, False, False
-    elif input_id == 'tab_gallery_1' and n_gallery_1:
-        return False, False, False, False, False, True, False
-    elif input_id == 'tab_gallery_2' and n_gallery_2:
-        return False, False, False, False, False, False, True
+    if input_id == 'tab_sales' and n_sales:
+        return True, False, False
+    elif input_id == 'tab_shipment' and n_shipment:
+        return False, True, False 
+    elif input_id == 'tab_inventory' and n_inventory:
+        return False, False, True
     else:
-        return True, False, False, False, False, False, False # App init
+        return True, False, False
     
-@app.callback([Output('content_cards', 'active'),
-               Output('content_social_cards', 'active'),
-               Output('content_tab_cards', 'active'),
-               Output('content_basic_boxes', 'active'),
-               Output('content_value_boxes', 'active'),
-               Output('content_gallery_1', 'active'),
-               Output('content_gallery_2', 'active')],
-               [Input('tab_cards', 'n_clicks'),
-                Input('tab_social_cards', 'n_clicks'),
-                Input('tab_tab_cards', 'n_clicks'),
-                Input('tab_basic_boxes', 'n_clicks'),
-                Input('tab_value_boxes', 'n_clicks'),
-                Input('tab_gallery_1', 'n_clicks'),
-                Input('tab_gallery_2', 'n_clicks')]
+@app.callback([Output('content_sales', 'active'),
+               Output('content_shipment', 'active'),
+               Output('content_inventory', 'active')],
+               [Input('tab_sales', 'n_clicks'),
+                Input('tab_shipment', 'n_clicks'),
+                Input('tab_inventory', 'n_clicks')]
 )
-def display_tab(n_cards, n_social_cards, n_tab_cards, n_basic_boxes, 
-                n_value_boxes, n_gallery_1, n_gallery_2):
+def display_tab(n_sales, n_shipment, n_inventory):
     
     ctx = dash.callback_context # Callback context to recognize which input has been triggered
 
@@ -181,27 +135,16 @@ def display_tab(n_cards, n_social_cards, n_tab_cards, n_basic_boxes,
     else:
         input_id = ctx.triggered[0]['prop_id'].split('.')[0]   
 
-    return activate(input_id, 
-                    n_cards, n_social_cards, n_tab_cards, n_basic_boxes, 
-                    n_value_boxes, n_gallery_1, n_gallery_2)
+    return activate(input_id, n_sales, n_shipment, n_inventory)
 
-@app.callback([Output('tab_cards', 'active'),
-               Output('tab_social_cards', 'active'),
-               Output('tab_tab_cards', 'active'),
-               Output('tab_basic_boxes', 'active'),
-               Output('tab_value_boxes', 'active'),
-               Output('tab_gallery_1', 'active'),
-               Output('tab_gallery_2', 'active')],
-               [Input('tab_cards', 'n_clicks'),
-                Input('tab_social_cards', 'n_clicks'),
-                Input('tab_tab_cards', 'n_clicks'),
-                Input('tab_basic_boxes', 'n_clicks'),
-                Input('tab_value_boxes', 'n_clicks'),
-                Input('tab_gallery_1', 'n_clicks'),
-                Input('tab_gallery_2', 'n_clicks')]
+@app.callback([Output('tab_sales', 'active'),
+               Output('tab_shipment', 'active'),
+               Output('tab_inventory', 'active')],
+               [Input('tab_sales', 'n_clicks'),
+                Input('tab_shipment', 'n_clicks'),
+                Input('tab_inventory', 'n_clicks')]
 )
-def activate_tab(n_cards, n_social_cards, n_tab_cards, n_basic_boxes, 
-                n_value_boxes, n_gallery_1, n_gallery_2):
+def activate_tab(n_sales, n_shipment, n_inventory):
     
     ctx = dash.callback_context # Callback context to recognize which input has been triggered
 
@@ -211,9 +154,7 @@ def activate_tab(n_cards, n_social_cards, n_tab_cards, n_basic_boxes,
     else:
         input_id = ctx.triggered[0]['prop_id'].split('.')[0]   
 
-    return activate(input_id, 
-                    n_cards, n_social_cards, n_tab_cards, n_basic_boxes, 
-                    n_value_boxes, n_gallery_1, n_gallery_2)
+    return activate(input_id, n_sales, n_shipment, n_inventory)
     
 @app.callback(Output('tab_box_1', 'children'),
               [Input('tab_box_1_menu', 'active_tab')]
@@ -242,14 +183,14 @@ def display_tabbox2(active_tab):
         return text_3
     
 # Update figure on slider change
-@app.callback(
-    Output('box-graph', 'figure'),
-    [Input('controlbar-slider', 'value')])
-def update_box_graph(value):
-    return plot_scatter(value)
+# @app.callback(
+    # Output('box-graph', 'figure'),
+    # [Input('controlbar-slider', 'value')])
+# def update_box_graph(value):
+    # return plot_scatter(value)
 
 # =============================================================================
 # Run app    
 # =============================================================================
 if __name__ == '__main__':
-    app.run_server(debug=False, port=8000)
+    app.run_server(debug=True, port=8000)

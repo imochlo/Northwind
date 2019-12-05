@@ -3,6 +3,7 @@ import dash_core_components as dcc
 import dash_admin_components as dac
 
 from plots.plots import plot_pie, plot_surface, plot_scatter
+from Model import get_total_sales_per_country_heatmap, get_amt_sold_over_time_bubble
 
 dropdown_items = [
 	dac.BoxDropdownItem(url="https://www.google.com", children="Link to google"),
@@ -11,7 +12,7 @@ dropdown_items = [
 	dac.BoxDropdownItem(url="#", children="item 3")
 ]
 
-sales_tab = dac.TabItem(id='content_cards', 
+sales_tab = dac.TabItem(id='content_sales', 
                               
     children=[
      
@@ -24,17 +25,17 @@ sales_tab = dac.TabItem(id='content_cards',
                             dac.BoxDropdown(dropdown_items),
                             collapsible = True,
                             closable = True,
-                            title="Closable box with dropdown"
+                            title = "Total Sales per Country",
                         ),
                     	dac.BoxBody(
                             dcc.Graph(
-                                figure=plot_pie(),
+                                figure=get_total_sales_per_country_heatmap(),
                                 config=dict(displayModeBar=False),
                                 style={'width': '38vw'}
-                            )
-                        )		
+                            )		
+                        )
                     ],
-                    color='warning',
+                    color='success',
                     width=6
                 ),
                         
@@ -43,17 +44,17 @@ sales_tab = dac.TabItem(id='content_cards',
                         dac.BoxHeader(
                             collapsible = True,
                             closable = True,
-                            title="Closable box with gradient"
+                            title="Number of Items Sold per Region Over Time"
                         ),
                     	dac.BoxBody(
                             dcc.Graph(
-                                figure=plot_surface(),
+                                figure=get_amt_sold_over_time_bubble(),
                                 config=dict(displayModeBar=False),
                                 style={'width': '38vw'}
                             )
                         )		
                     ],
-                    gradient_color="success",
+                    color='warning',
                     width=6
                 )
             ], 
@@ -61,25 +62,16 @@ sales_tab = dac.TabItem(id='content_cards',
         ),
                         
         html.Div(    
-            dac.Box(
-                [
-                    dac.BoxHeader(
-                        collapsible = True,
-                        closable = True,
-                        title="Card with solidHeader and elevation"
-                    ),
-                	dac.BoxBody(
-                        dcc.Graph(
-                            figure=plot_scatter(),
-                            config=dict(displayModeBar=False),
-                            style={'width': '38vw'}
-                        )
-                    )		
-                ],
-                color='primary',
-                solid_header=True,
-                elevation=4,
-                width=6
+            dac.SimpleBox(
+            	style = {'height': "600px"},
+                title = "Total Sales per Country",
+                children=[
+                    dcc.Graph(
+                        figure=get_total_sales_per_country_heatmap(),
+                        config=dict(displayModeBar=False),
+                        style={'width': '38vw'}
+                    )
+                ]
             ),
             className='row'
         )
